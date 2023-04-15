@@ -1,1 +1,3 @@
-## All art and animations for our game will be housed here
+## Art and Animations
+
+Currently, this part of the repository holds beta art for some character, item, and menu ideas
