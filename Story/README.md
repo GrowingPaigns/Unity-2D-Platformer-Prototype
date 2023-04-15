@@ -1,56 +1,30 @@
-#### Title: CSCI 3762 - Network Programming - Lab 7
+## Story and Gameplay Documentation
 
-#### Name: Samuel Hilfer
+This section of the repository will hold all ideas related to story premise/objectives and potential gameplay improvements. 
 
-#### Due: 04/17/2023
+### Story
+- Working Titles:
+   - From Jupiter
+   - 15 Minutes To Jupiter
+   - 15 Minutes From Jupiter
+   
+- Story Objectives:
+   - Descend through the layers of Jupiter's shell
+   - Fight Bosses / Bosses + Enemies
+   - Level Up (new abilities)
+   - Get to the "core" in 15:00 mins or less and start the final encounter (no time limit)
+   
+	The start of the story...
 
-## Movement and Optimization - Lab 7
+	- Long ago an eldritch deity took form. In order to evolve within the harsh absence of the celestial void, it took to devouring the energy produced by stars.
+	    - This process, when it was young, was painfully slow. As a relativly weak being, it could neither get too close to a star nor too far away from one less it would be melted by solar radiation, or frozen in the absence of space. Because of this, it learned how to ride along the gravitational waves of these massive bodies, while ever so gradually increasing its strength. It would continue this agonizingly slow training, gradually growing towards the point where it could eat chunks of stars whole. Though in this time, it would also learn of truly how empty the universe is. As it traveled from system to system, it would begin to starve, and break down its own bodily structure, physically reducing its size so that it wouldnt perish before its next meal.
+	- After eons of change, the unnatual being became the size of a small moon, and in this evolution, gained new ways to increase its efficiency at harvesting cosmic energy, and spreading its influence.
+	    - It had learned how to create a cocoon around itself using bodily byproduct. This vastly increased its surface area, until it was much larger than an other planet in the system, which allowed it to soak up more solar power than itd be able to on its own. However, the downfall of this cocoon would be that it caused the undescribable mass to enter a comatose state for hundreds of thousands of years at a time as it gradually regained strength, and size.
+	    	- This cocoon was not left defenseless however, as the beast slumbered, its body still naturally produces byproduct, which seeps through the cracks in its shell. These byproducts, minerals, gasses, and liquids, would eventually facilitate the growth of new life. Relatives, if not direct descendants of the deity, these beings were far more powerful than any lifeforms in their respective galaxies, though they often fell quite a bit short intelectually, only ever mumbling one barely intelligible word; Jupiter. 
+		- Although, these lesser creatures were nothing like kin to the creature. For once Jupiter had completely absorbed the power its chosen star, it would errupt from its shell, scattering the outer debris of its cocoon, and all of the residents therwithin, across the expanses of the void.
+	 - After finding its most recent roost in our solar system, however, things took a turn for life on Jupiter. Whether it be because of the harmony of our system, or from the evolved output of Jupiter's bodily waste, intelligent, resourceful, and hardy beings were born.
+	 
+	 - As one of the more recently born of this eldritch species, you (the player) are also one of the fittest generations born yet. Your story picks up millions of years into Jupiter's evolution, just as it is about to break free from its cocoon. The eldest surviving sage of your species has been studying the makeup of your planet their entire life, and has foretold of a great catastrophe in the near future after having witnessed the horror that slumbers within. He declares war on the god, something must be done, teams must be assembled to slay the creature less the entire world ends. Nearly as soon as the words stumble from his mouth, the ground begins to shake, great plumes of gas and smoke fill the sky, and the grass gives way below your feet.
+	 - Now isolated underground with no way back up, the only way left to go is down into the spiraling darkness. Will you evolve, survive, and anihilate Jupiter before the world before you crumbles to nothingness, or will you simply fade into obscurity as the ones who existed before you did?
+	 
 
-### To-Do:				
-
-| Requrements                                                               | Completed |
-|---------------------------------------------------------------------------|-----------|
-| Lab 6 (and prior) functionality                                           | √         |
-| 'move' variable and functionality                                         | √         |
-| Optimized send path (msgs not forwarded to any ports in send path)        | √         |
-
-## Code updates from the previous lab...
-	
-      The most notable update to the code in this lab is the concept of movement being implemented. Now with a single command, no matter how far away a drone is located in the "grid" from the sender, the drone will change its position (location). This section was rather simple to implement, and even helped me refine my code by now storing every config related variable in a struct, making it much easier to modify drone values than it was before.  
-
-      Beyond that, in this lab we also optimized the way in which messages get forwarded. Now, everytime a message gets forwarded, the current ports in the send-path kvp are checked, and any ports within that path which also match our stored config variable get skipped over. This basically ensures that duplicate messages are no longer received regardless of the TTL. The drone/drones which wind up forwarding messages also inform the user of which ports they will not be forwarding the message to, though, I did exclude the port of the forwarding machine from these messages, as I believe its assumed that the forwarding drone would not be sending to itself.  
-
----------------------------------------------------------------------------
-
-### [NOTES FOR RUNTIME]
-	
-      I have not changed anything regarding runtime between this and the previous lab. The executed 'make' command is still 'gcc -o drone7 drone7.c -lm', and I have not changed any of the variables the user needs to enter on the command line. The 'msg' and 'toPort' kvps are requred to be input before each send, and the 'move' command is optional.
-         
-        ---------------------------------------------------------------------------
-                 {Everything below this line is runtime notes from lab 6}
-        ---------------------------------------------------------------------------
-        
-      With version 6 of the drone, I have run into an issue with my makefile. Though the commands I am using are technically correct, and though the same makefile worked with lab 5 (drone5), there is now an error that pops up when running "make" that states that one of my variables is set but never used. This may sound like a simple issue, but its not. That's because this variable is absolutely being used in multiple spots throughout the function it is defined within. I was unable to figure out why exactly the make command is producing this error, though I was able to narrow the issue down to the CFLAGs (either -g or -Wall) being the issue. This is quite confusing to me, because previously in the semester I was using those two flags to make my program without any errors.
-    
-    My solution to this was to simply remove the CFLAGS, which means my makefile now runs without them, but it also makes properly. For easy reference, below are the two commands that are/were being used by the makefile.
-    
-        Old:
-            gcc -g -Wall drone6.c -o drone6 -lm
-    
-    
-        New:
-            gcc -o drone6 drone6.c -lm
-         
-
----------------------------------------------------------------------------
-
-
-### Issues during testing on (04/17/2023):
-
-    (TBD - if there are any)     
-    
-### Issues Remaining in the program (04/14/2023)
-    
-      As far as I am aware, there are no glaring* issues in my code. The sending, receiving, forwarding, and moving functionality seems to operate without fault. I am quite excited by this, as it seems with the optimization we did in this lab, I can no longer cause the multiple edge case errors I was experiencing in the previous lab. Buffer overflow cases seem to also have been handled, as after inputting multiple lines of random text, the programs all remain functional (though they don't return any sort of message to inform the user that they're outputting garbage).
-      
-      *[All that said, I have been able to segment fault my program if multiple of the same kvp are sent (i.e. msg:"1" msg:"2" toPort...). Even in this this case though, only the drone that first receives it will crash (i.e if the sender is close enough for the recipient to directly accept it, or if the recipient tries to forward the message). This is still obviously quite a large issue that needs to be addressed, but ultimately it shouldn't cause a problem for any normal buffers being sent.]
