@@ -1,6 +1,6 @@
 #### Authors:
-Alexander Martinez
-Samuel Hilfer
+    Alexander Martinez
+    Samuel Hilfer
 
 # 15 Minutes From Jupiter - Prototype
 
