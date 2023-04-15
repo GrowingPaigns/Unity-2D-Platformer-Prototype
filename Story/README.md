@@ -3,18 +3,20 @@
 This section of the repository will hold all ideas related to story premise/objectives and potential gameplay improvements. 
 
 ### Story
-- Working Titles:
+- W**orking Titles:**
    - From Jupiter
    - 15 Minutes To Jupiter
    - 15 Minutes From Jupiter
    
-- Story Objectives:
+- **Story Objectives:**
    - Descend through the layers of Jupiter's shell
    - Fight Bosses / Bosses + Enemies
    - Level Up (new abilities)
    - Get to the "core" in 15:00 mins or less and start the final encounter (no time limit)
    
-	The start of the story...
+   ----------------------------------------------------
+   
+	**The start of the story...**
 
 	- Long ago an eldritch deity took form. In order to evolve within the harsh absence of the celestial void, it took to devouring the energy produced by stars.
 	    - This process, when it was young, was painfully slow. As a relativly weak being, it could neither get too close to a star nor too far away from one less it would be melted by solar radiation, or frozen in the absence of space. Because of this, it learned how to ride along the gravitational waves of these massive bodies, while ever so gradually increasing its strength. It would continue this agonizingly slow training, gradually growing towards the point where it could eat chunks of stars whole. Though in this time, it would also learn of truly how empty the universe is. As it traveled from system to system, it would begin to starve, and break down its own bodily structure, physically reducing its size so that it wouldnt perish before its next meal.
@@ -27,4 +29,17 @@ This section of the repository will hold all ideas related to story premise/obje
 	 - As one of the more recently born of this eldritch species, you (the player) are also one of the fittest generations born yet. Your story picks up millions of years into Jupiter's evolution, just as it is about to break free from its cocoon. The eldest surviving sage of your species has been studying the makeup of your planet their entire life, and has foretold of a great catastrophe in the near future after having witnessed the horror that slumbers within. He declares war on the god, something must be done, teams must be assembled to slay the creature less the entire world ends. Nearly as soon as the words stumble from his mouth, the ground begins to shake, great plumes of gas and smoke fill the sky, and the grass gives way below your feet.
 	 - Now isolated underground with no way back up, the only way left to go is down into the spiraling darkness. Will you evolve, survive, and anihilate Jupiter before the world before you crumbles to nothingness, or will you simply fade into obscurity as the ones who existed before you did?
 	 
+----------------------------------------------------------
 
+Gameplay Ideas:
+- Bullet hell where every attack can be deflected
+    - Parry system
+- Boss rush (core gameplay/side mode after beating the game)
+- Distructable Terrain (? may be complicated depending on if we want to randomly generate levels or not)
+- Randomly Generated components 
+    - Perk system
+        - End of Level Freebies (gain a perk after beating a boss, maybe 2 if you perfect it)
+        - Level up after gathering a certain amount of xp/money/whatever from beating enemies
+        - Start out slow (minor life steal, extra health/speed/damage), end crazy (Homing x Explosive shots, slower enemies/shots, resurect once, every hit without getting hit multiplies damage 1.2x, for any damage taken deal back 3x to all enemies on screen)
+    - Random levels/enemy placement
+    - Random weapons (could also make it like a hero shooter where each character has a specific weapon/ability and they can only level those up)
