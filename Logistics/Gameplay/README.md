@@ -3,7 +3,7 @@
 This section of the repository will hold all ideas related to potential gameplay improvements. 
 
 ### Level Ideas: 
-- **Randomly Generated**
+- **Randomly Generated (i.e. Risk of Rain, Rogue Legacy)**
     - could randomly generate everything or only a few things
         - Levels
         - Enemies/Enemy Types
@@ -12,13 +12,13 @@ This section of the repository will hold all ideas related to potential gameplay
     - Provides a great amount of replayability
         - Can cause multiple balancing/other issues during creation
         
-- **Hand Crafted** 
+- **Hand Crafted (i.e. games like Hyper Light Drifter)** 
     - Can be more reliable for speedrunning stuff
         - Consistency in levels could be good for the countdown we were thinking about
     - Can ensure that there are beautiful backgrounds
         - Prevents random generation from creating errors in level design/item placement
         
-- **Mix Of Both** 
+- **Mix Of Both (i.e. Spelunky, Dead Cells, Binding of Isaac, Enter the Gungeon)** 
     - Regular rooms get randomly generated, Boss rooms/Special/Other rooms are hand crafted 
         - Provides some consistency while leaving a bit up to random chance
             - (Dead Cells)
