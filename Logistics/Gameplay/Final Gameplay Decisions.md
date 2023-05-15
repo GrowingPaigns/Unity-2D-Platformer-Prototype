@@ -7,6 +7,10 @@ This section of the repository will hold all ideas related to potential gameplay
     - Regular rooms get randomly generated, Boss rooms/Special/Other rooms are hand crafted 
         - Provides some consistency while leaving a bit up to random chance
 
+## Weapon Ideas:
+- **Perks**
+    - Weapons provide different benefits/changes to different perks 
+
 ### Gameplay Ideas: 
 - **Parrying** 
     - Dark souls-esk (one pary, longer cooldown)
