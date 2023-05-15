@@ -6,21 +6,36 @@ This section of the repository will hold all ideas related to potential gameplay
 - **Mix Of Both (i.e. Spelunky, Dead Cells, Binding of Isaac, Enter the Gungeon)** 
     - Regular rooms get randomly generated, Boss rooms/Special/Other rooms are hand crafted 
         - Provides some consistency while leaving a bit up to random chance
+- Starting level 
+  - Open checst
+  - Option for randomly generated weaopn (or choose the one you want)
+    - First time playing, users have to use fists (perks included)
+    - After beating a boss, they drop a specific weapon, and you can use that in the next run
+      - Bosses powers are the powers of the weapon they hold   
 
-### Weapon Ideas:
-- **Perks**
-    - Weapons provide different benefits/changes to player movement/stats 
+### Player Ideas:
+- Movement 
+  - Start with basic movement (WASD) 
+    - Jumping (Different levels of jump?)
+      - Hold to jump higher/farther 
+      - W and Spacebar, ^ are key options
+    - Slide 
+      - CTRL, C, and S are key options 
+    - Dodging
+      - Shift 
+    - Want controls to be tight and responsive, not slipery 
+      - End with any super movement
 
-### Gameplay Ideas: 
-- **Parrying** 
-    - Dark souls-esk (one pary, longer cooldown)
-        - want the focus to be on movement
-        - *Probably going to tie this to a weapon*
+  - Gradually add changes to movement as the player upgrades themselves/their weapon
 
-- **Dodging**   
-    - Shift/CTRL to dodge
-        - structure it to be a dash instead of a roll
-        - multiple dodges before cooldown procs    
+- Weapons
+  - Lock the player into ONE weapon per run
+    - Each weapon has positives and negatives 
+      - Shield makes you slower but higher health  
+      - Light weapon makes you dodge further/faster
+    - Each weapon has a skill tree allowing for crazy combinations
+  - Player will earn experience from normal enemies
 
-- **Bullet Hell**
-    - Keeps the player engaged  
+
+
+Enemies
