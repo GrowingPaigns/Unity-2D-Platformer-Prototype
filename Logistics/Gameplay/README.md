@@ -11,12 +11,7 @@ This section of the repository will hold all ideas related to potential gameplay
         - Chests/openables 
     - Provides a great amount of replayability
         - Can cause multiple balancing/other issues during creation
-        
-- **Hand Crafted (i.e. games like Hyper Light Drifter)** 
-    - Can be more reliable for speedrunning stuff
-        - Consistency in levels could be good for the countdown we were thinking about
-    - Can ensure that there are beautiful backgrounds
-        - Prevents random generation from creating errors in level design/item placement
+ 
         
 - **Mix Of Both (i.e. Spelunky, Dead Cells, Binding of Isaac, Enter the Gungeon)** 
     - Regular rooms get randomly generated, Boss rooms/Special/Other rooms are hand crafted 
