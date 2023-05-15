@@ -16,7 +16,6 @@
   - Gradually add changes to movement as the player upgrades themselves/their weapon
 
 - Weapons
-  - Start with fist, get sword and item from tutorial enemy after killing them
   - Lock the player into ONE weapon per run
     - Each weapon has positives and negatives 
       - Shield makes you slower but higher health  
