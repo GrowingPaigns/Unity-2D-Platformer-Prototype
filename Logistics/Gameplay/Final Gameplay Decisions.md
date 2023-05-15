@@ -9,7 +9,7 @@ This section of the repository will hold all ideas related to potential gameplay
 
 ### Weapon Ideas:
 - **Perks**
-    - Weapons provide different benefits/changes to different perks 
+    - Weapons provide different benefits/changes to player movement/stats 
 
 ### Gameplay Ideas: 
 - **Parrying** 
