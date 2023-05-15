@@ -11,8 +11,12 @@ This section of the repository will hold all ideas related to potential gameplay
 - **Parrying** 
     - Dark souls-esk (one pary, longer cooldown)
         - want the focus to be on movement
+        - *Probably going to tie this to a weapon*
 
 - **Dodging**   
     - Shift/CTRL to dodge
         - structure it to be a dash instead of a roll
         - multiple dodges before cooldown procs    
+
+- **Bullet Hell**
+    - Keeps the player engaged  
