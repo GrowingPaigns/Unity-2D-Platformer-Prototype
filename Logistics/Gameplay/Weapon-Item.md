@@ -1,4 +1,4 @@
-## Weapon Documentation
+## Weapon and Item Documentation
 
 This section of the repository will hold important item or weapon ideas. 
 
