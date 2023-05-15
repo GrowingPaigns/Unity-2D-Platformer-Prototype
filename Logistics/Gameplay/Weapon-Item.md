@@ -8,5 +8,6 @@ This section of the repository will hold important item or weapon ideas.
     - The Player can click along the screen to slash apart enemies 
         
 ### Item Ideas:
-- **WIP**
+- **Blink Item**
+    - Allows the user to teleport to a place on the screen by clicking, it also slows down time while they click
     
