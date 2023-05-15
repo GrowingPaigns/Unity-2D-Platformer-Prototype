@@ -38,4 +38,12 @@ This section of the repository will hold all ideas related to potential gameplay
 
 
 
-Enemies
+### Enemy Ideas:
+- Melee + Projectile enemies
+    - Heavies (Shoot lots of projectiles at once with a long cooldown)
+        - Move slow, lots of health
+    - Normals (Shoot projectiles intermitently, short cooldown)
+        - Move normally, normal health
+    - Swarms (Melee only)
+        - Extremely fast movement, minescule health 
+ 
