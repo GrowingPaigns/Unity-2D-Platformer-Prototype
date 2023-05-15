@@ -1,4 +1,4 @@
-## Story and Gameplay Documentation
+## Story Documentation
 
 This section of the repository will hold all ideas related to story premise/objectives and potential gameplay improvements. 
 
@@ -16,7 +16,7 @@ This section of the repository will hold all ideas related to story premise/obje
    
    ----------------------------------------------------
    
-	**The start of the story...**
+	**The start of the story... (but not necessarily what will be the ending story)**
 
 	- Long ago an eldritch deity took form. In order to evolve within the harsh absence of the celestial void, it took to devouring the energy produced by stars.
 	    - This process, when it was young, was painfully slow. As a relativly weak being, it could neither get too close to a star nor too far away from one less it would be melted by solar radiation, or frozen in the absence of space. Because of this, it learned how to ride along the gravitational waves of these massive bodies, while ever so gradually increasing its strength. It would continue this agonizingly slow training, gradually growing towards the point where it could eat chunks of stars whole. Though in this time, it would also learn of truly how empty the universe is. As it traveled from system to system, it would begin to starve, and break down its own bodily structure, physically reducing its size so that it wouldnt perish before its next meal.
