@@ -19,6 +19,7 @@ This section of the repository will hold all ideas related to potential gameplay
     - Jumping (Different levels of jump?)
       - Hold to jump higher/farther 
       - W and Spacebar, ^ are key options
+      - Wall jump
     - Slide 
       - CTRL, C, and S are key options 
     - Dodging
