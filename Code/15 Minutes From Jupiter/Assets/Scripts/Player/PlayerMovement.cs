@@ -90,6 +90,11 @@ public class PlayerMovement : MonoBehaviour
 
             Flip();
         }
+        
+        if (GroundCollision()) // Check if the player is grounded
+        {
+            isWallJumping = false; // Reset the isWallJumping flag
+        }
     }
     
     /* called once per frame during runtime. used to handle things like user input, animations,
