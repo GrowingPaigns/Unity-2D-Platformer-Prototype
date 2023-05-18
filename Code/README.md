@@ -1,6 +1,6 @@
 ## Code Updates :computer:
 
-*All of the included files in this section are from the unity project that we will be working on.*
+:information_source: *All of the included files in this section are from the unity project that we will be working on.*
 
 > Included in this section will be asset materials, scripts, and scenes as they are found in the project along with some necessary user settings
 
