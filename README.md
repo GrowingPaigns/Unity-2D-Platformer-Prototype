@@ -1,7 +1,7 @@
 
 
 
-## 15 Minutes From Jupiter - Prototype
+## 15 Minutes From Jupiter (Prototype) {
 _A repository for the beginnings of a roguelike bullet hell developed in Summer 2023_<br>
 
 <table>
@@ -12,7 +12,7 @@ _A repository for the beginnings of a roguelike bullet hell developed in Summer 
   </tr>
 </table>
 
-## :open_file_folder: Folders: 
+## <:open_file_folder:> Folders: 
 ### :headphones: Ambiance: 
 - Contains all assets related to sound fx or music within the game
 
@@ -32,3 +32,4 @@ _A repository for the beginnings of a roguelike bullet hell developed in Summer 
     - Gameplay Directory - contains weapon ideas, general gameplay ideas, and decided upon gameplay concepts
     - Story Directory - holds the 1st version of the story (will most likely be completely different by the final version)
     - Timeline Directory - will contain the project timeline (to be updated on 05/19/23)
+## }
