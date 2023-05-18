@@ -14,22 +14,21 @@ This section of the repository will hold all ideas related to potential gameplay
       - Bosses powers are the powers of the weapon they hold   
 
 ### Player Ideas:
-- Movement 
-  - Start with basic movement (WASD) 
-    - Jumping (Different levels of jump?)
-      - Hold to jump higher/farther 
-      - W and Spacebar, ^ are key options
-      - Wall jump
-    - Slide 
-      - CTRL, C, and S are key options 
-    - Dodging
+- [X] Start with basic movement (WASD) 
+  - [X] Jumping (Different levels of jump?)
+    - Hold to jump higher/farther 
+    - W and Spacebar, ^ are key options
+    - Wall jump
+  - [ ] Slide _(This will be moved to combat script)_
+    - CTRL, C, and S are key options 
+  - [X] Sprinting
       - Shift 
-    - Want controls to be tight and responsive, not slipery 
-      - End with any super movement
-
+      
+Want controls to be tight and responsive, not slipery 
+  - End with any super movement
   - Gradually add changes to movement as the player upgrades themselves/their weapon
 
-- Weapons
+- [ ] Weapons
   - Lock the player into ONE weapon per run
     - Each weapon has positives and negatives 
       - Shield makes you slower but higher health  
@@ -40,7 +39,7 @@ This section of the repository will hold all ideas related to potential gameplay
 
 
 ### Enemy Ideas:
-- Melee + Projectile enemies
+- [ ] Melee + Projectile enemies
     - Heavies (Shoot lots of projectiles at once with a long cooldown)
         - Move slow, lots of health
     - Normals (Shoot projectiles intermitently, short cooldown)
