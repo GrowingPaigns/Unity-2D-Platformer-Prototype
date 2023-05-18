@@ -14,6 +14,7 @@ This section of the repository will hold all ideas related to potential gameplay
       - Bosses powers are the powers of the weapon they hold   
 
 ### Player Ideas:
+
 - [X] Start with basic movement (WASD) 
   - [X] Jumping (Different levels of jump?)
     - Hold to jump higher/farther 
@@ -28,6 +29,8 @@ Want controls to be tight and responsive, not slipery
   - End with any super movement
   - Gradually add changes to movement as the player upgrades themselves/their weapon
 
+### Weapon Ideas:
+
 - [ ] Weapons
   - Lock the player into ONE weapon per run
     - Each weapon has positives and negatives 
@@ -39,6 +42,7 @@ Want controls to be tight and responsive, not slipery
 
 
 ### Enemy Ideas:
+
 - [ ] Melee + Projectile enemies
     - Heavies (Shoot lots of projectiles at once with a long cooldown)
         - Move slow, lots of health
