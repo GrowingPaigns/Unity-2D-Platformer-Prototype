@@ -7,7 +7,7 @@ This section of the repository will hold all ideas related to potential gameplay
     - Regular rooms get randomly generated, Boss rooms/Special/Other rooms are hand crafted 
         - Provides some consistency while leaving a bit up to random chance
 - Starting level 
-  - Open checst
+  - Open chest
   - Option for randomly generated weaopn (or choose the one you want)
     - First time playing, users have to use fists (perks included)
     - After beating a boss, they drop a specific weapon, and you can use that in the next run
