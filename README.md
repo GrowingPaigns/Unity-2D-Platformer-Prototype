@@ -12,7 +12,7 @@ _A repository for the beginnings of a roguelike bullet hell developed in Summer 
   </tr>
 </table>
 
-## Folders: :open_file_folder:
+## :open_file_folder: Folders: 
 ### :headphones: Ambiance: 
 - Contains all assets related to sound fx or music within the game
 
