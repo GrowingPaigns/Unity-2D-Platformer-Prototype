@@ -1,9 +1,4 @@
 
-
-
-## 15 Minutes From Jupiter (Prototype) {
-:information_source: _A repository for the beginnings of a roguelike bullet hell developed in Summer 2023_<br>
-
 <table>
   <tr>
     <td>Authors:<br>
@@ -11,6 +6,11 @@
       &nbsp;&nbsp;&nbsp;Samuel Hilfer</td>
   </tr>
 </table>
+
+
+## 15 Minutes From Jupiter (Prototype) {
+> :information_source: _A repository for the beginnings of a roguelike bullet hell developed in Summer 2023_<br>
+
 
 ## (:open_file_folder:) Folders: 
 ### :headphones: Ambiance: 
