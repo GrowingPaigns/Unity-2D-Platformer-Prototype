@@ -1,10 +1,16 @@
-#### Authors:
-    Alexander Martinez
-    Samuel Hilfer
 
-# 15 Minutes From Jupiter - Prototype
 
-> _A repository for the beginnings of a roguelike bullet hell developed in Summer 2023_
+
+## 15 Minutes From Jupiter - Prototype
+_A repository for the beginnings of a roguelike bullet hell developed in Summer 2023_<br>
+
+<table>
+  <tr>
+    <td>Authors:<br>
+      &nbsp;&nbsp;&nbsp;Alexander Martinez<br>
+      &nbsp;&nbsp;&nbsp;Samuel Hilfer</td>
+  </tr>
+</table>
 
 ## Folders: :open_file_folder:
 ### :headphones: Ambiance: 
