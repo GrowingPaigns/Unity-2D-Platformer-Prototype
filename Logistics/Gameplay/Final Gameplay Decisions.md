@@ -13,6 +13,18 @@ This section of the repository will hold all ideas related to potential gameplay
     - After beating a boss, they drop a specific weapon, and you can use that in the next run
       - Bosses powers are the powers of the weapon they hold   
 
+- Core Loop
+  - Loop: Level, Boss, Level, Boss
+    - Levels are side-scrollers and randomly generated 
+    - Boss rooms are hand crafted 
+      - Bosses range from having random attacks to hand crafted attacks 
+  - Final Boss: Jupiter
+    - Phase 1: Boss is in embryo resting
+      - Fight tentacle appendages  
+    - Phase 2: Jupiter is trying to eat its way out of the embryo
+      - Fight its head
+        - at 50%, maybe have to fight a few arms as well     
+
 ### Player Ideas:
 
 - [X] Start with basic movement (WASD) 
