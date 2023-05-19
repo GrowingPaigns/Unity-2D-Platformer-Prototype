@@ -23,12 +23,12 @@ public class PlayerMovement : MonoBehaviour
     public int sprintSpeed;
     private bool isSprinting;
     public int jumpForce;
-    private bool facingRight = true;  // used to flip the character model (dont know if this works for sprites yet, but it works for colliders)
+    public bool facingRight = true;  // used to flip the character model (dont know if this works for sprites yet, but it works for colliders)
     // ---------------------------------
 
     private Rigidbody2D rb;           // determines the physics of the player
     private float horizontalInput;    // carries the values to determine L/R movement
-    
+
     public float jumpTime;            // the time that a player can hold jump to go higher
     private float jumpTimeCounter;    // need this to be able to reset the time a player can hold jump for
     private bool isJumping;           // check if the player is in the air
@@ -54,7 +54,7 @@ public class PlayerMovement : MonoBehaviour
     public float walljumpingDuration = 0.3f; // how long it will take before L/R input is received again after a wall jump
     public Vector2 wallJumpPower = new Vector2(); // the strength of the wall jump in x and y directions
 
-
+    public bool canMove = true;
 
     // Start is called before the first frame update
     void Start()
@@ -69,10 +69,12 @@ public class PlayerMovement : MonoBehaviour
      * of framerate (at least up to 60 frames)*/
     private void FixedUpdate()
     {
-        horizontalInput = Input.GetAxisRaw("Horizontal"); // checks for L/R input
+        
 
-        if (!isWallJumping) // if the character is grounded or in the air...
+        if (canMove && !isWallJumping) // if the character is grounded or in the air...
         {
+            horizontalInput = Input.GetAxisRaw("Horizontal"); // checks for L/R input
+
             if (isSprinting) // ... do this for sprinting
             {
                 rb.velocity = new Vector2(horizontalInput * sprintSpeed, rb.velocity.y);
@@ -86,22 +88,24 @@ public class PlayerMovement : MonoBehaviour
         if (horizontalInput > 0 && facingRight)
         {
             Flip();
-        } else if (horizontalInput < 0 && !facingRight) {
+        }
+        else if (horizontalInput < 0 && !facingRight)
+        {
 
             Flip();
         }
-        
+
         if (GroundCollision()) // Check if the player is grounded
         {
             isWallJumping = false; // Reset the isWallJumping flag
         }
     }
-    
+
     /* called once per frame during runtime. used to handle things like user input, animations,
      * and other game logic */
     private void Update()
     {
-        
+
         // Calculates short jump (tapping space)
         if (GroundCollision() && Input.GetKeyDown(KeyCode.Space))
         {
@@ -143,10 +147,20 @@ public class PlayerMovement : MonoBehaviour
         WallSlide();
         WallJump();
 
-        // New code for moving up the wall
+        // New code for climbing up the wall
         if (WallCollision() && Input.GetKey(KeyCode.W))
         {
-            rb.velocity = new Vector2(rb.velocity.x, wallClimbingSpeed);
+            if (!isWallJumping) // Only allow movement if not wall jumping
+            {
+                rb.velocity = new Vector2(rb.velocity.x, wallClimbingSpeed);
+                horizontalInput = Input.GetAxisRaw("Horizontal");
+
+                // Allow horizontal movement while climbing
+                if (horizontalInput != 0)
+                {
+                    rb.velocity = new Vector2(horizontalInput * walkSpeed, rb.velocity.y);
+                }
+            }
         }
     }
 
@@ -164,7 +178,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
     /* Handles flippage of the character */
-    private void Flip()
+    public void Flip()
     {
         Vector3 currentScale = gameObject.transform.localScale;
         currentScale.x *= -1;
@@ -185,18 +199,35 @@ public class PlayerMovement : MonoBehaviour
         // if in the air and in contact with the wall...
         if (WallCollision() && !GroundCollision())
         {
-            if (Input.GetKey(KeyCode.S)) // ... drops the player at normal speed instead of sliding
+            isWallJumping = false;
+
+            horizontalInput = Input.GetAxisRaw("Horizontal"); // Added this line to check for L/R input
+
+            if (horizontalInput != 0)
+            {
+                if (!WallCollision())
+                {
+                    isWallSliding = false;
+                    rb.velocity = new Vector2(horizontalInput * walkSpeed, rb.velocity.y);
+                } else
+                {
+                    isWallSliding = true;
+                    rb.velocity = new Vector2(rb.velocity.x, Mathf.Clamp(rb.velocity.y, -wallSlidingSpeed, float.MaxValue));
+                }
+            }
+            else if (Input.GetKey(KeyCode.S)) // ... drops the player at normal speed instead of sliding
             {
                 isWallSliding = false;
                 rb.velocity = new Vector2(horizontalInput * walkSpeed, rb.velocity.y);
-            } 
+            }
             else // ... causes the player to slide
             {
                 isWallSliding = true;
                 rb.velocity = new Vector2(rb.velocity.x, Mathf.Clamp(rb.velocity.y, -wallSlidingSpeed, float.MaxValue));
             }
-            
-        } else
+
+        }
+        else
         {
             isWallSliding = false;
         }
@@ -205,14 +236,15 @@ public class PlayerMovement : MonoBehaviour
     /* Handles wall jump mechanisms */
     private void WallJump()
     {
-        if (isWallSliding) 
+        if (isWallSliding)
         {
             // set direction opposite of current player x direction
             wallJumpingDirection = -transform.localScale.x;
-            wallJumpCounter = wallJumpingTime; 
+            wallJumpCounter = wallJumpingTime;
 
             CancelInvoke(nameof(StopWallJump));
-        } else
+        }
+        else
         {
             // gives player extra time to wall jump after leaving the wall
             wallJumpCounter -= Time.deltaTime;
@@ -223,7 +255,7 @@ public class PlayerMovement : MonoBehaviour
             isWallJumping = true;
             // gathers wall jump power from the public Vector2 variable
             rb.velocity = new Vector2(-wallJumpingDirection * wallJumpPower.x, wallJumpPower.y);
-            
+
             wallJumpCounter = 0f; // player has used up their wall jump
 
             // if player orientation is different from wall jump direction, update the way they are facing

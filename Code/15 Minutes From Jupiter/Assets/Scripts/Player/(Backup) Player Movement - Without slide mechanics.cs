@@ -71,13 +71,19 @@ public class Backup : MonoBehaviour
     {
         horizontalInput = Input.GetAxisRaw("Horizontal"); // checks for L/R input
 
-        if (!isWallJumping) // if the character is grounded or in the air...
+        if (isWallSliding)
         {
-            if (isSprinting) // ... do this for sprinting
+            // Handle wall sliding
+            rb.velocity = new Vector2(rb.velocity.x, Mathf.Clamp(rb.velocity.y, -wallSlidingSpeed, float.MaxValue));
+        }
+        else if (!isWallJumping)
+        {
+            // Handle regular movement
+            if (isSprinting)
             {
                 rb.velocity = new Vector2(horizontalInput * sprintSpeed, rb.velocity.y);
             }
-            else // ... do this for regular movement
+            else
             {
                 rb.velocity = new Vector2(horizontalInput * walkSpeed, rb.velocity.y);
             }
@@ -242,6 +248,7 @@ public class Backup : MonoBehaviour
     private void StopWallJump()
     {
         isWallJumping = false;
+        isWallSliding = false;
     }
 
     /* draws the wall/floor colliders for debug reference */
