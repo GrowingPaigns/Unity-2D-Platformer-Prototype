@@ -16,14 +16,23 @@ This section of the repository will hold all ideas related to potential gameplay
 ### Player Ideas:
 
 - [X] Start with basic movement (WASD) 
-  - [X] Jumping (Different levels of jump?)
-    - Hold to jump higher/farther 
-    - W and Spacebar, ^ are key options
-    - Wall jump
-  - [ ] Slide _(This will be moved to combat script)_
-    - CTRL, C, and S are key options 
-  - [X] Sprinting
-      - Shift 
+   - [X] Jumping (Different levels of jump?)
+     - Hold to jump higher/farther 
+     - W and Spacebar, ^ are key options
+     - Wall jump
+   - [ ] ~~Slide~~ _(This will be moved to combat script)_
+     - CTRL, C, and S are key options 
+   - [X] Sprinting
+     - Shift 
+      
+-  [X] Implement Advanced Movements
+   - [X] Wall Jumping
+     - Space, or A/D+Space to jump away from wall
+   - [X] Wall Sliding 
+     - Slide slow when pressed against wall
+     - Press 'S' to slide fast
+   - [X] Wall Climbing
+     - Press 'W' to climb wall
       
 Want controls to be tight and responsive, not slipery 
   - End with any super movement
