@@ -55,6 +55,8 @@ public class PlayerMovement : MonoBehaviour
     public Vector2 wallJumpPower = new Vector2(); // the strength of the wall jump in x and y directions
 
     public bool canMove = true;
+    public float coyoteTime;
+    private float coyoteTimeCounter;
 
     // Start is called before the first frame update
     void Start()
@@ -97,7 +99,12 @@ public class PlayerMovement : MonoBehaviour
 
         if (GroundCollision()) // Check if the player is grounded
         {
+            coyoteTimeCounter = coyoteTime;
             isWallJumping = false; // Reset the isWallJumping flag
+        }
+        else
+        {
+            coyoteTimeCounter -= Time.fixedDeltaTime;
         }
     }
 
@@ -106,21 +113,31 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
 
+
+
         // Calculates short jump (tapping space)
-        if (GroundCollision() && Input.GetKeyDown(KeyCode.Space))
+        if (GroundCollision() && coyoteTimeCounter > 0f && Input.GetKeyDown(KeyCode.Space))
         {
             isJumping = true;
             jumpTimeCounter = jumpTime;
             rb.velocity = Vector2.up * jumpForce;
         }
+        else if (!GroundCollision() && coyoteTimeCounter > 0f && Input.GetKeyDown(KeyCode.Space))
+        {
+            isJumping = true;
+            jumpTimeCounter = jumpTime;
+            rb.velocity = Vector2.up * jumpForce;
+            coyoteTimeCounter = 0f;
+        }
 
         // Calculates large jump (holding space
         if (Input.GetKey(KeyCode.Space) && isJumping == true)
         {
-            if (jumpTimeCounter > 0)
+            if (!GroundCollision() && coyoteTimeCounter > 0f && jumpTimeCounter > 0)
             {
                 rb.velocity = Vector2.up * jumpForce;
                 jumpTimeCounter -= Time.deltaTime;
+                coyoteTimeCounter = 0f;
             }
             else
             {
