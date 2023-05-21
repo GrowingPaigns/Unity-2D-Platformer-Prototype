@@ -1,0 +1,4 @@
+repository "15 Minutes From Jupiter@FromJupiter@cloud"
+  path "/"
+    br "/main"
+    co "/main"
