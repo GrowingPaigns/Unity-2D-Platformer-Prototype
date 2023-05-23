@@ -617,7 +617,7 @@ MonoBehaviour:
     m_Bits: 128
   wallSlidingSpeed: 1
   wallClimbingSpeed: 4
-  walljumpingDuration: 0.3
+  walljumpingDuration: 0.5
   wallJumpPower: {x: 8, y: 14}
   canMove: 1
   coyoteTime: 0.1

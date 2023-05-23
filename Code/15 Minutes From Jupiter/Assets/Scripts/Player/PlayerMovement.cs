@@ -302,7 +302,7 @@ public class PlayerMovement : MonoBehaviour
             wallJumpCounter -= Time.deltaTime;
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && wallJumpCounter > 0f)
+        if (WallCollision() && Input.GetKeyDown(KeyCode.Space) && wallJumpCounter > 0f)
         {
             isWallSliding = false;
             isWallJumping = true;
@@ -319,6 +319,8 @@ public class PlayerMovement : MonoBehaviour
             Debug.Log("Velocity: " + rb.velocity);
             // Disable player input for the duration of walljumpingDuration
             StartCoroutine(PauseInputForDuration(walljumpingDuration));
+        } else if (Input.GetKeyDown(KeyCode.Space) && wallJumpCounter > 0f) {
+
         }
     }
 
