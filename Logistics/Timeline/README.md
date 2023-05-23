@@ -10,10 +10,15 @@ _Project timeline regarding the upcomming weeks_
  
 - [ ] Level Implementation (Pt. 2) - (Expected Deadline - TBD)
     - Can either wait until Pt. 3 to start random generation or implement now
-        - Spelunky level gen for random levels might be easiest to implement
-        - Otherwise just implement handcrafted levels (look at youtube for examples)
+       - Spelunky level gen for random levels might be easiest to implement
+       - Otherwise just implement handcrafted levels (look at youtube for examples)
    
-- [ ] Player Implementation (Pt. 3,4,5)
+- [ ] Basic Player Implementation (Pt. 3,4,5) - (Expected Deadline - 05/28/2023)
    - [X] Temp. Animation Implementations (Pt. 4 + 5)
-   - [ ] Player Attack Implementation (Pt. 3)
+       - Basic + advanced movements have been implemented in 16 bit fashion
+   - [ ] Player Attack Implementation (Pt. 3) 
+       - Left Click - quick, light attack
+       - Right Click - slow, heavy attack
+       - Move the charge attack bound to LMB right now
+           - Might be better as a movement ability than as an attack 
 
