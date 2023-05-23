@@ -107,11 +107,11 @@ public class PlayerAttack : MonoBehaviour
         Vector2 launchDirection = (targetPosition - transform.position).normalized;
         Debug.Log("Launch Dir: " + launchDirection);
 
-        if (launchDirection.x > 0 && playerMovement.facingRight)
+        if (launchDirection.x > 0 && !playerMovement.facingRight)
         {
             playerMovement.Flip();
         }
-        else if (launchDirection.x < 0 && !playerMovement.facingRight)
+        else if (launchDirection.x < 0 && playerMovement.facingRight)
         {
             playerMovement.Flip();
         }
