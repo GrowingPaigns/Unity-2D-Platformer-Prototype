@@ -8,7 +8,7 @@
 </table>
 
 
-## Ordered Chaos - 15 Minutes From Jupiter (Prototype) {
+## *"15 Minutes From Jupiter"* (Prototype) {
 > :information_source: _A repository for the beginnings of a roguelike bullet hell developed in Summer 2023_<br>
 
 
