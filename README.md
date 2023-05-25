@@ -12,7 +12,7 @@
 > :information_source: _A repository for the beginnings of a roguelike bullet hell developed in Summer 2023_<br>
 
 
-## 🗄️ Folders: 
+## Folders: 
 ### 🎵 [Ambiance](https://github.com/GrowingPaigns/15-Minutes-From-Jupiter/tree/main/Ambiance): 
 - Contains all assets related to sound fx or music within the game
 
