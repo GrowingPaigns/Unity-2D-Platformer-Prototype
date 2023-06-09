@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 9d84b05bb88c13b4f9cfe7259ed3e11d
+guid: 8d186f9b695b8354298a258e83cfe09d
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -7,7 +7,7 @@ TextureImporter:
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
-    sRGBTexture: 0
+    sRGBTexture: 1
     linearTexture: 0
     fadeOut: 0
     borderMipMap: 0
@@ -47,7 +47,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 15
+  spritePixelsToUnits: 16
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -117,7 +117,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: PlayerIdle_0
+      name: EnemyIdleLeft_0
       rect:
         serializedVersion: 2
         x: 0
@@ -131,14 +131,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d78cbf3527381384693e50a869a5e6d9
-      internalID: 1412324467
+      spriteID: 27006aad2848f5d40bdde89144acde0f
+      internalID: -921546372
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PlayerIdle_1
+      name: EnemyIdleLeft_1
       rect:
         serializedVersion: 2
         x: 16
@@ -152,14 +152,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f351dec79f1128d4684cd2abbcf6cf87
-      internalID: 891547071
+      spriteID: d76cc6c4fb6fe8e4d9f2cc22d7b35825
+      internalID: 209873642
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PlayerIdle_2
+      name: EnemyIdleLeft_2
       rect:
         serializedVersion: 2
         x: 32
@@ -173,14 +173,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bd1d66629ee05c042a3bf9be075f9dd8
-      internalID: 441517276
+      spriteID: f1b8f42cd454b23408047553b06602db
+      internalID: -1702660731
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PlayerIdle_3
+      name: EnemyIdleLeft_3
       rect:
         serializedVersion: 2
         x: 48
@@ -194,14 +194,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0250b026ed584d74fb073174bb3b8561
-      internalID: -1430665922
+      spriteID: 5b1c5edaf9d4e7b42a98a103d66e6919
+      internalID: -182358519
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PlayerIdle_4
+      name: EnemyIdleLeft_4
       rect:
         serializedVersion: 2
         x: 64
@@ -215,14 +215,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e42e8eb6855f159449c8ee3ba88d14d7
-      internalID: 1441964752
+      spriteID: 78e51b5d16ed37349baad00860d64cea
+      internalID: -1091820215
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PlayerIdle_5
+      name: EnemyIdleLeft_5
       rect:
         serializedVersion: 2
         x: 80
@@ -236,14 +236,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 710c82eba38f2214a80f26f539b784c3
-      internalID: -1196789128
+      spriteID: 0bfffc7162da30c4fa2c35461626cd3c
+      internalID: 205083740
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PlayerIdle_6
+      name: EnemyIdleLeft_6
       rect:
         serializedVersion: 2
         x: 96
@@ -257,14 +257,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f5f2b4ba5fe7ba742bfe22a923c9fb54
-      internalID: -358564066
+      spriteID: b5d4b5bdabc26a148b0294c31a35d6a0
+      internalID: 337892516
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PlayerIdle_7
+      name: EnemyIdleLeft_7
       rect:
         serializedVersion: 2
         x: 112
@@ -278,8 +278,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 42a90d281f68cc448a8e9a94521f4414
-      internalID: 27118224
+      spriteID: d509e1025a585824cb460d28557a299f
+      internalID: -321626811
       vertices: []
       indices: 
       edges: []
@@ -295,14 +295,14 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      PlayerIdle_0: 1412324467
-      PlayerIdle_2: 441517276
-      PlayerIdle_5: -1196789128
-      PlayerIdle_4: 1441964752
-      PlayerIdle_7: 27118224
-      PlayerIdle_3: -1430665922
-      PlayerIdle_1: 891547071
-      PlayerIdle_6: -358564066
+      EnemyIdleLeft_3: -182358519
+      EnemyIdleLeft_4: -1091820215
+      EnemyIdleLeft_5: 205083740
+      EnemyIdleLeft_7: -321626811
+      EnemyIdleLeft_6: 337892516
+      EnemyIdleLeft_0: -921546372
+      EnemyIdleLeft_2: -1702660731
+      EnemyIdleLeft_1: 209873642
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

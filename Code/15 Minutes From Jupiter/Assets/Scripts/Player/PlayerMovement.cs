@@ -36,7 +36,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;     // Objects with the 'ground' layer we want to check for
     [SerializeField] private BoxCollider2D wallCheck;   // Used to check if we are next to a wall
     [SerializeField] private LayerMask wallLayer;       // Objects with the 'wall' layer we want to check for
-
+    [SerializeField] private BoxCollider2D playerHitbox;// 
 
     [SerializeField] private float wallJumpingTime;     // Time after exiting the wall that the player can still wall jump
     [SerializeField] private float wallJumpDuration;    // How long it will take before L/R input is received again after a wall jump
@@ -369,8 +369,8 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool("WallJumping", isWallJumping);
     }
 
-    // dont know if this really needs to be a coroutine, that was from something I was trying earlier
-    private IEnumerator Dash() 
+    
+    private IEnumerator Dash()
     {
         canDash = false;
         isDashing = true;
@@ -381,14 +381,38 @@ public class PlayerMovement : MonoBehaviour
         Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 dashDirection = (mousePosition - rb.position).normalized;
 
-        dashDirection.y *= 0.8f;
+        dashDirection.y *= 0.4f;
         dashDirection *= dashSpeed;
 
         rb.gravityScale = 0f;
         rb.velocity = dashDirection;
         trail.emitting = true;
 
+        // Find all colliders with the "Enemy" tag
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+
+        // Ignore collision between the player and the enemies
+        foreach (GameObject enemy in enemies)
+        {
+            Collider2D enemyCollider = enemy.GetComponent<Collider2D>();
+            if (enemyCollider != null)
+            {
+                Physics2D.IgnoreCollision(GetComponent<Collider2D>(), enemyCollider, true);
+            }
+        }
+
         yield return new WaitForSeconds(dashTime);
+
+        // Restore collision between the player and the enemies
+        foreach (GameObject enemy in enemies)
+        {
+            Collider2D enemyCollider = enemy.GetComponent<Collider2D>();
+            if (enemyCollider != null)
+            {
+                Physics2D.IgnoreCollision(GetComponent<Collider2D>(), enemyCollider, false);
+            }
+        }
+
         trail.emitting = false;
         rb.gravityScale = originalGravity;
         isDashing = false;
