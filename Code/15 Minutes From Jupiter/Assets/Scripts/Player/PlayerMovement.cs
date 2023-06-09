@@ -45,11 +45,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float wallClimbingSpeed;   // Speed for climbing
     [SerializeField] private Vector2 wallJumpPower;     // The strength of the wall jump in x and y directions
 
-    [SerializeField] private float dashSpeed;           // Speed of the dash
-    [SerializeField] private float dashTime;            // The amount of time we want to dash for until stopping
-    [SerializeField] private float dashCooldown;        // The time inbetween dashes
     [SerializeField] private float slowMotionTimeScale; // How much we want to slow down time by when dashing
-    
+
     [SerializeField] TrailRenderer trail;               // Trail rendered during sprinting and dashing
     /* --------------------------------- */
 
@@ -78,9 +75,15 @@ public class PlayerMovement : MonoBehaviour
     private bool isSlowMotion = false;  // Slows down time while holding down the dash button
     /* --------------------------------- */
 
+    
+
+
+
+
     // Start is called before the first frame update
     void Start()
     {
+
         // initialize the physics for our player
         rb = GetComponent<Rigidbody2D>();
     }
@@ -126,7 +129,7 @@ public class PlayerMovement : MonoBehaviour
             }
 
             // used in animator to switch between idle/moving animations
-            animator.SetFloat("HorizSpeed", Mathf.Abs(horizontalInput)); 
+            animator.SetFloat("HorizSpeed", Mathf.Abs(horizontalInput));
         }
 
 
@@ -146,7 +149,7 @@ public class PlayerMovement : MonoBehaviour
         {
             // Reset the isWallJumping flag(s) and the coyote time variable
             coyoteTimeCounter = coyoteTime;
-            isWallJumping = false; 
+            isWallJumping = false;
             animator.SetBool("WallJumping", false);
         }
         else
@@ -168,11 +171,6 @@ public class PlayerMovement : MonoBehaviour
      * and other game logic */
     private void Update()
     {
-
-        if (isDashing) // if the player is dashing dont listen for any input
-        {
-            return;
-        }
 
         // Calculates jump (tapping space)
         if (GroundCollision() && coyoteTimeCounter > 0f && Input.GetKeyDown(KeyCode.Space))
@@ -203,7 +201,9 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetMouseButtonDown(1) && canDash) // charge dash
         {
             isSlowMotion = true;
+            
         }
+
 
         if (Input.GetMouseButtonUp(1)) // perform dash
         {
@@ -213,6 +213,7 @@ public class PlayerMovement : MonoBehaviour
                 isSlowMotion = false;
             }
         }
+
 
     }
 
@@ -253,7 +254,7 @@ public class PlayerMovement : MonoBehaviour
         isWallJumping = false;
         // if in the air and in contact with the wall...
         if (WallCollision() && !GroundCollision() && !Input.GetKey(KeyCode.Space))
-        { 
+        {
             GetComponent<SpriteRenderer>().flipX = true;
 
             if (horizontalInput != 0)
@@ -268,7 +269,7 @@ public class PlayerMovement : MonoBehaviour
                         rb.velocity = new Vector2(horizontalInput * walkSpeed, rb.velocity.y);
                     }
 
-                } 
+                }
                 else
                 {
                     isWallSliding = true;
@@ -279,16 +280,16 @@ public class PlayerMovement : MonoBehaviour
             }
             else if (horizontalInput == 0 && Input.GetKey(KeyCode.W)) // wall climbing without horizontal input
             {
-                
-                    isWallSliding = true;
-                    rb.velocity = new Vector2(rb.velocity.x, wallClimbingSpeed);
 
-                    if (horizontalInput != 0)
-                    {
-                        rb.velocity = new Vector2(horizontalInput * walkSpeed, rb.velocity.y);
-                    }
+                isWallSliding = true;
+                rb.velocity = new Vector2(rb.velocity.x, wallClimbingSpeed);
 
-                
+                if (horizontalInput != 0)
+                {
+                    rb.velocity = new Vector2(horizontalInput * walkSpeed, rb.velocity.y);
+                }
+
+
             }
             else if (Input.GetKey(KeyCode.S)) // ... drops the player at normal speed instead of sliding
             {
@@ -300,7 +301,7 @@ public class PlayerMovement : MonoBehaviour
                 isWallSliding = true;
                 rb.velocity = new Vector2(rb.velocity.x, Mathf.Clamp(rb.velocity.y, -wallSlidingSpeed, float.MaxValue));
 
-               
+
             }
 
         }
@@ -324,7 +325,7 @@ public class PlayerMovement : MonoBehaviour
             wallJumpingDirection = -transform.localScale.x;
             wallJumpCounter = wallJumpingTime;
 
-            
+
         }
         else
         {
@@ -369,59 +370,14 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool("WallJumping", isWallJumping);
     }
 
+
     
-    private IEnumerator Dash()
-    {
-        canDash = false;
-        isDashing = true;
 
-        float originalGravity = rb.gravityScale;
 
-        // Calculate the dash direction based on the mouse position
-        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 dashDirection = (mousePosition - rb.position).normalized;
+    public float dashPower;
+    public float dashTime;
+    public float dashCooldown;
 
-        dashDirection.y *= 0.4f;
-        dashDirection *= dashSpeed;
-
-        rb.gravityScale = 0f;
-        rb.velocity = dashDirection;
-        trail.emitting = true;
-
-        // Find all colliders with the "Enemy" tag
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-
-        // Ignore collision between the player and the enemies
-        foreach (GameObject enemy in enemies)
-        {
-            Collider2D enemyCollider = enemy.GetComponent<Collider2D>();
-            if (enemyCollider != null)
-            {
-                Physics2D.IgnoreCollision(GetComponent<Collider2D>(), enemyCollider, true);
-            }
-        }
-
-        yield return new WaitForSeconds(dashTime);
-
-        // Restore collision between the player and the enemies
-        foreach (GameObject enemy in enemies)
-        {
-            Collider2D enemyCollider = enemy.GetComponent<Collider2D>();
-            if (enemyCollider != null)
-            {
-                Physics2D.IgnoreCollision(GetComponent<Collider2D>(), enemyCollider, false);
-            }
-        }
-
-        trail.emitting = false;
-        rb.gravityScale = originalGravity;
-        isDashing = false;
-
-        yield return new WaitForSeconds(dashCooldown);
-        canDash = true;
-    }
-
-    /* This dash code can be used if we want keyboard directional control instead of mouse
     private IEnumerator Dash()
     {
         canDash = false;
@@ -440,7 +396,7 @@ public class PlayerMovement : MonoBehaviour
         else if (Input.GetKey(KeyCode.D))
         {
             dashDirectionX = dashPower; // Dash to the right
-        } 
+        }
         else
         {
             dashDirectionX = 0;
@@ -448,12 +404,12 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetKey(KeyCode.W))
         {
-            dashDirectionY = dashPower/2; // Dash upwards
+            dashDirectionY = dashPower / 3; // Dash upwards
         }
         else if (Input.GetKey(KeyCode.S))
         {
             dashDirectionY = -dashPower * 2; // Dash downwards
-        } 
+        }
         else
         {
             dashDirectionY = 0;
@@ -472,6 +428,6 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(dashCooldown);
         canDash = true;
     }
-    */
 
 }
+

@@ -18,6 +18,9 @@ public class EnemyMovement : MonoBehaviour
     private bool isWaiting = false;
     private float waitTime = 0f;
     private float moveTime = 0f;
+    private bool isDetectionEnabled = true;
+    private bool isKnockbackPaused = false;
+    private float knockbackPauseTimer = 0f;
 
     private void Start()
     {
@@ -27,6 +30,21 @@ public class EnemyMovement : MonoBehaviour
 
     private void Update()
     {
+        if (isKnockbackPaused)
+        {
+            knockbackPauseTimer -= Time.deltaTime;
+            if (knockbackPauseTimer <= 0f)
+            {
+                isKnockbackPaused = false;
+                isDetectionEnabled = true;
+                rb.velocity = Vector2.zero;
+            }
+            else
+            {
+                return;
+            }
+        }
+
         if (isWaiting)
         {
             waitTime -= Time.deltaTime;
@@ -49,7 +67,7 @@ public class EnemyMovement : MonoBehaviour
                 Flip();
             }
 
-            if (PlayerInRange())
+            if (isDetectionEnabled && PlayerInRange())
             {
                 GameObject player = GameObject.FindGameObjectWithTag("Player");
                 Vector3 direction = player.transform.position - transform.position;
@@ -116,7 +134,11 @@ public class EnemyMovement : MonoBehaviour
         Vector3 enemyScale = transform.localScale;
         enemyScale.x *= -1;
         transform.localScale = enemyScale;
-        rb.velocity = new Vector2((isMovingRight ? 1 : -1) * walkSpeed, rb.velocity.y);
+
+        if (!isWaiting && GroundCollision())
+        {
+            rb.velocity = new Vector2((isMovingRight ? 1 : -1) * walkSpeed, rb.velocity.y);
+        }
     }
 
     private void FlipTowardsMovement()
@@ -134,5 +156,18 @@ public class EnemyMovement : MonoBehaviour
     private void SetRandomMovementTime()
     {
         moveTime = Random.Range(1f, 8f); // Adjust the range as desired for the random movement time
+    }
+
+    public void DisableDetection(float duration)
+    {
+        isDetectionEnabled = false;
+        StartCoroutine(PauseKnockback(duration));
+    }
+
+    private IEnumerator PauseKnockback(float duration)
+    {
+        isKnockbackPaused = true;
+        knockbackPauseTimer = duration;
+        yield return new WaitForSeconds(duration);
     }
 }
