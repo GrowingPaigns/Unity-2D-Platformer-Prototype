@@ -100,23 +100,86 @@ public class EnemyMovement : MonoBehaviour
         if (player != null)
         {
             Vector3 direction = player.transform.position - transform.position;
-            direction.y = 0f;
+            
 
-            RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, direction.normalized, raycastDistance);
-
-            foreach (RaycastHit2D hit in hits)
+            // Check if the player is directly above the enemy
+            if (direction.sqrMagnitude <= 0.01f)
             {
-                if (hit.collider.gameObject == player)
+                return false;
+            }
+
+            int rayCount = 10; // Number of rays in the cone
+            float coneAngle = 45f; // Angle of the cone in degrees
+            float angleIncrement = coneAngle / (rayCount - 1); // Angle increment between rays
+
+            for (int i = 0; i < rayCount; i++)
+            {
+                float angle = -coneAngle / 2f + i * angleIncrement; // Calculate the angle of the current ray
+
+                Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.up); // Rotate the direction vector by the angle
+                Vector3 rotatedDirection = rotation * direction;
+
+                // Apply a vertical offset to the rotatedDirection
+                rotatedDirection += Vector3.up * 0.1f; // Adjust the vertical offset as desired
+
+                RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, rotatedDirection.normalized, raycastDistance);
+
+                bool playerDetected = false;
+
+                foreach (RaycastHit2D hit in hits)
+                {
+                    if (hit.collider.gameObject != gameObject && !IsChildCollider(hit.collider, transform))
+                    {
+                        if (hit.collider.gameObject == player)
+                        {
+                            // Calculate the angle between the rotatedDirection and the direction to the player
+                            float angleToPlayer = Vector3.Angle(direction, rotatedDirection);
+
+                            // Exclude the rays with angles greater than a certain threshold (e.g., 75 degrees)
+                            if (angleToPlayer <= 75f)
+                            {
+                                // Draw a line between the enemy and the detected player
+                                Debug.DrawLine(transform.position, hit.collider.transform.position, Color.red);
+                                playerDetected = true;
+                                break;
+                            }
+                        } else
+                        {
+                            return false;
+                        }
+                    }
+                }
+
+                if (playerDetected)
                 {
                     return true;
                 }
             }
-
-            Debug.DrawRay(transform.position, direction.normalized * raycastDistance, Color.red);
         }
 
         return false;
     }
+
+    private bool IsChildCollider(Collider2D collider, Transform parentTransform)
+    {
+        Transform colliderTransform = collider.transform;
+
+        while (colliderTransform != null)
+        {
+            if (colliderTransform == parentTransform)
+            {
+                return true;
+            }
+
+            colliderTransform = colliderTransform.parent;
+        }
+
+        return false;
+    }
+
+
+
+
 
     private bool GroundCollision()
     {

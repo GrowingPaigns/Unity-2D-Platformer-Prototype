@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class PlayerAttack : MonoBehaviour
 {
@@ -8,38 +9,46 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] float maxDistance;
     [SerializeField] float knockbackSpeed;
     [SerializeField] float knockbackDuration;
+    [SerializeField] float attackCooldown;
 
     private bool isKnockbackActive = false;
     private float knockbackTimer = 0f;
-    private bool isRaycastLocked = false;
-    private GameObject lockedEnemy;
+    public bool isRaycastLocked = false;
+    public GameObject lockedEnemy;
+    private float attackCooldownTimer = 0f;
+
+    private Plane cursorPlane; // The plane on which the cursor will be positioned
 
     void Start()
     {
         // Initialize playerMovement reference if needed
-        playerMovement = GetComponent<PlayerMovement>();
+        playerMovement = GetComponent<PlayerMovement>(); 
+        cursorPlane = new Plane(Vector3.forward, Vector3.zero); // Define the cursor plane (e.g., XY plane)
+
     }
+
 
     void Update()
     {
-        if (isKnockbackActive)
-        {
-            // Update the knockback timer
-            knockbackTimer -= Time.deltaTime;
-            if (knockbackTimer <= 0f)
-            {
-                // End the knockback effect
-                isKnockbackActive = false;
-            }
-        }
+        // Update the attack cooldown timer
+        attackCooldownTimer -= Time.deltaTime;
+       
 
-        if (Input.GetMouseButtonDown(0) && !isKnockbackActive && !isRaycastLocked)
+        if (Input.GetMouseButtonDown(0) && !isRaycastLocked && attackCooldownTimer <= 0f)
         {
+            Vector3 hitPoint = new Vector3(0,0,0);
+            Vector2 direction = new Vector2(0,0);
+
             // Get the mouse position in the world
-            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Ray mousePosition = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            if (cursorPlane.Raycast(mousePosition, out float dist))
+            {
+                hitPoint = mousePosition.GetPoint(dist);
+            }
 
             // Calculate the direction from the player to the mouse
-            Vector2 direction = mousePosition - transform.position;
+            direction = hitPoint - transform.position;
 
             // Normalize the direction to get a unit vector
             direction.Normalize();
@@ -48,7 +57,7 @@ public class PlayerAttack : MonoBehaviour
             int layerMask = ~(1 << gameObject.layer);
 
             // Calculate the distance to the mouse
-            float distance = Vector2.Distance(transform.position, mousePosition);
+            float distance = Vector2.Distance(transform.position, hitPoint);
 
             // Adjust the distance based on the maximum distance
             distance = Mathf.Clamp(distance, 0f, maxDistance);
@@ -69,9 +78,16 @@ public class PlayerAttack : MonoBehaviour
                     GameObject hitObject = hit.collider.gameObject;
                     Debug.Log("Hit object: " + hitObject.name);
 
-                    // Lock the raycast to the hit enemy's position
-                    isRaycastLocked = true;
-                    lockedEnemy = hitObject;
+                    // Apply knockback velocity to the locked enemy
+                    Rigidbody2D enemyRigidbody = hit.collider.gameObject.GetComponent<Rigidbody2D>();
+                    if (enemyRigidbody != null)
+                    {
+                        ApplyKnockbackVelocity(enemyRigidbody, direction);
+                    }
+
+                    // Start the attack cooldown
+                    attackCooldownTimer = attackCooldown;
+
                 }
             }
         }
@@ -86,33 +102,41 @@ public class PlayerAttack : MonoBehaviour
             }
             else
             {
-                // Lock the raycast to the nearest enemy's position
-                Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, maxDistance);
-                float nearestDistance = Mathf.Infinity;
-                GameObject nearestEnemy = null;
+                // Convert the mouse position to a world position
+                Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-                foreach (Collider2D collider in colliders)
+                // Perform an overlap check at the mouse position
+                Collider2D hitCollider = Physics2D.OverlapPoint(mousePosition);
+
+                if (hitCollider != null)
                 {
-                    if (collider.gameObject.CompareTag("Enemy") && collider.transform.parent == null)
+                    GameObject hitObject = hitCollider.gameObject;
+
+                    if (hitObject.CompareTag("Enemy") && hitObject.transform.parent == null)
                     {
-                        float distanceToEnemy = Vector2.Distance(transform.position, collider.transform.position);
-                        if (distanceToEnemy < nearestDistance)
-                        {
-                            nearestDistance = distanceToEnemy;
-                            nearestEnemy = collider.gameObject;
-                        }
+                        // Perform actions based on the hit object (enemy)
+                        Debug.Log("Hit object: " + hitObject.name);
+
+                        // Lock the raycast to the hit enemy's position
+                        isRaycastLocked = true;
+                        lockedEnemy = hitObject;
+                    }
+                    else
+                    {
+                        // Perform actions for other objects (non-enemies)
+                        Debug.Log("Hit object is not an enemy.");
                     }
                 }
-
-                if (nearestEnemy != null)
+                else
                 {
-                    isRaycastLocked = true;
-                    lockedEnemy = nearestEnemy;
+                    // No object was hit, unlock the raycast and return to following the mouse
+                    isRaycastLocked = false;
+                    lockedEnemy = null;
                 }
             }
         }
 
-        if (isRaycastLocked && lockedEnemy != null && Input.GetMouseButtonDown(0))
+        if (isRaycastLocked && lockedEnemy != null && Input.GetMouseButtonDown(0) && attackCooldownTimer <= 0f)
         {
             // Update the direction to the locked enemy's position
             Vector2 direction = lockedEnemy.transform.position - transform.position;
@@ -136,12 +160,23 @@ public class PlayerAttack : MonoBehaviour
                         lockedEnemy = hit.collider.gameObject;
                     }
 
+                    // Perform actions based on the hit object
+                    GameObject hitObject = hit.collider.gameObject;
+                    Debug.Log("Hit object: " + hitObject.name);
+
+                    // Lock the raycast to the hit enemy's position
+                    isRaycastLocked = true;
+                    lockedEnemy = hitObject;
+
                     // Apply knockback velocity to the locked enemy
                     Rigidbody2D enemyRigidbody = lockedEnemy.GetComponent<Rigidbody2D>();
                     if (enemyRigidbody != null)
                     {
                         ApplyKnockbackVelocity(enemyRigidbody, direction);
                     }
+
+                    // Start the attack cooldown
+                    attackCooldownTimer = attackCooldown;
                 }
             }
         }

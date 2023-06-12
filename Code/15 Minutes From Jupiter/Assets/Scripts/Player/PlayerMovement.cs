@@ -37,6 +37,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private BoxCollider2D wallCheck;   // Used to check if we are next to a wall
     [SerializeField] private LayerMask wallLayer;       // Objects with the 'wall' layer we want to check for
     [SerializeField] private BoxCollider2D playerHitbox;// 
+    [SerializeField] private BoxCollider2D dashCheck;   // 
 
     [SerializeField] private float wallJumpingTime;     // Time after exiting the wall that the player can still wall jump
     [SerializeField] private float wallJumpDuration;    // How long it will take before L/R input is received again after a wall jump
@@ -49,6 +50,11 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] TrailRenderer trail;               // Trail rendered during sprinting and dashing
     /* --------------------------------- */
+
+
+    [SerializeField] private float horizDashPower;
+    [SerializeField] private float vertDashPower;
+    [SerializeField] private float dashTime;
 
 
     /* -- Private Fields -- 
@@ -198,20 +204,12 @@ public class PlayerMovement : MonoBehaviour
         WallSlide();
         WallJump();
 
-        if (Input.GetMouseButtonDown(1) && canDash) // charge dash
+        
+        if (Input.GetMouseButtonDown(1) && canDash) // perform dash
         {
-            isSlowMotion = true;
-            
-        }
-
-
-        if (Input.GetMouseButtonUp(1)) // perform dash
-        {
-            if (isSlowMotion)
-            {
-                StartCoroutine(Dash());
-                isSlowMotion = false;
-            }
+            StartCoroutine(Dash());
+            isSlowMotion = false;
+    
         }
 
 
@@ -234,6 +232,11 @@ public class PlayerMovement : MonoBehaviour
     private bool WallCollision()
     {
         return wallCheck.IsTouchingLayers(wallLayer);
+    }
+
+    private bool DashCollision()
+    {
+        return dashCheck.IsTouchingLayers(wallLayer) || dashCheck.IsTouchingLayers(groundLayer);
     }
 
     /* Handles flippage of the character */
@@ -371,12 +374,9 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
-    
 
 
-    public float dashPower;
-    public float dashTime;
-    public float dashCooldown;
+
 
     private IEnumerator Dash()
     {
@@ -385,47 +385,78 @@ public class PlayerMovement : MonoBehaviour
 
         float originalGravity = rb.gravityScale;
 
-        float dashDirectionX = 0f;
-        float dashDirectionY = 0f;
+        Vector2 dashDirection = new Vector2();
+        float knockbackSpeed = 1.2f;
+
+        GameObject enemy = GameObject.FindGameObjectWithTag("Enemy");
+        Collider2D enemyCollider = enemy.GetComponent<Collider2D>();
+        Rigidbody2D enemyRigidbody = enemy.GetComponent<Rigidbody2D>();
 
         // Determine dash direction based on the keys held
         if (Input.GetKey(KeyCode.A))
         {
-            dashDirectionX = -dashPower; // Dash to the left
+            dashDirection.x = -horizDashPower; // Dash to the left
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            dashDirectionX = dashPower; // Dash to the right
+            dashDirection.x = horizDashPower; // Dash to the right
         }
         else
         {
-            dashDirectionX = 0;
+            dashDirection.x = 0;
         }
 
         if (Input.GetKey(KeyCode.W))
         {
-            dashDirectionY = dashPower / 3; // Dash upwards
+            dashDirection.y = vertDashPower; // Dash upwards
         }
-        else if (Input.GetKey(KeyCode.S))
+        else if (Input.GetKey(KeyCode.S) && !GroundCollision())
         {
-            dashDirectionY = -dashPower * 2; // Dash downwards
+            dashDirection.y = -vertDashPower * 2; // Dash downwards
         }
         else
         {
-            dashDirectionY = 0;
+            dashDirection.y = 0;
         }
 
-
         rb.gravityScale = 0f;
-        rb.velocity = new Vector2(dashDirectionX, dashDirectionY);
+        rb.velocity = new Vector2(dashDirection.x, dashDirection.y);
         trail.emitting = true;
 
-        yield return new WaitForSeconds(dashTime);
+        
+
+        Vector2 knockbackVelocity = dashDirection * knockbackSpeed;
+        // Store the original collision settings of the player's collider
+        bool originalCollisionState = playerHitbox.enabled;
+
+        playerHitbox.enabled = false; // Disable the collider temporarily
+
+        float startTime = Time.time;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < dashTime)
+        {
+            if (WallCollision() || DashCollision())
+            {
+                break; // Exit the loop if WallCollision() is true
+            }
+
+            yield return null;
+            elapsedTime = Time.time - startTime;
+        }
+
+        if (enemyCollider != null && wallCheck.IsTouching(enemyCollider))
+        {
+            enemyRigidbody.velocity = Vector2.zero;
+            playerHitbox.enabled = true; // Re-enable the collider
+        }
+
         trail.emitting = false;
         rb.gravityScale = originalGravity;
         isDashing = false;
 
-        yield return new WaitForSeconds(dashCooldown);
+        playerHitbox.enabled = originalCollisionState; // Restore the original collision state
+
         canDash = true;
     }
 
