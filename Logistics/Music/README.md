@@ -4,8 +4,9 @@ _Ideas regarding soundtrack (menu/in-game)_
 ### TO DO List:
 - [X] Create basic menu music
 - [ ] Create beta level music
-  - Western/Mining Feel
+  - Dwarven Aesthetic
     - Deep Chanting
-    - "4 on the floor" beat  
+    - Driving bass drum 
+    - Should feel like you've been taken back to the mines
 
 _more to be added..._
