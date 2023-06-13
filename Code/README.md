@@ -6,6 +6,19 @@
 
 > #### :heavy_exclamation_mark: Getting Started:
 > - Download this section of the repo 
-> - Open the 15 Minutes From Jupiter file through unity hub to access the project (I think)
+> - Open the 15 Minutes From Jupiter file directly through Unity hub to access the project
+
+#### Files Included:
+
+> #### Assets: _(Contains Everything Related to the Development of the Game)_
+> - Animations - character/enemy/ui animations
+> - FirstLevelAssets - assets for the development of the intro level/demo
+> - MainMenuAssets - assets for the development of the main menu
+> - Materials - physics-based material mechanics
+> - Prefabs (outdated, only there because that's how the main menu was set up in a previous project)
+> - Scenes - levels/menus in development
+> - Scripts - coding logic which makes the game run
+> - Other files - unity specific data
+> #### Other Files: _(Contain Specific Project Settings to Actually Make the Project Run in Unity)_
 
 
