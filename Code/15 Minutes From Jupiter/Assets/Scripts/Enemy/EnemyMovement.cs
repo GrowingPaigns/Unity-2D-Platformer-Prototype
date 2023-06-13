@@ -9,6 +9,8 @@ public class EnemyMovement : MonoBehaviour
     [SerializeField] private float chaseSpeed;
     [SerializeField] private BoxCollider2D groundCheck;
     [SerializeField] private BoxCollider2D wallCheck;
+    [SerializeField] private BoxCollider2D hitbox;
+    [SerializeField] private BoxCollider2D headbox;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask wallLayer;
     [SerializeField] private float raycastDistance;
@@ -228,5 +230,15 @@ public class EnemyMovement : MonoBehaviour
         isKnockbackPaused = true;
         knockbackPauseTimer = duration;
         yield return new WaitForSeconds(duration);
+    }
+
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            Physics2D.IgnoreCollision(hitbox, collision.collider);
+            Physics2D.IgnoreCollision(headbox, collision.collider);
+        }
     }
 }

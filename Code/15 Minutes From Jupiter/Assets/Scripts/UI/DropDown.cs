@@ -8,7 +8,7 @@ public class DropDown : MonoBehaviour
 
     public void OpenPanel()
     {
-        if (Panel != null)
+        if (Panel != null && !Input.GetKey(KeyCode.Space) && !Input.GetKey(KeyCode.KeypadEnter))
         {
             Animator animation = Panel.GetComponent<Animator>();
 

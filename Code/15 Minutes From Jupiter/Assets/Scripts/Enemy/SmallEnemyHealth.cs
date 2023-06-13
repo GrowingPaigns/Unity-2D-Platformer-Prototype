@@ -33,18 +33,20 @@ public class SmallEnemyHealth : MonoBehaviour
 
         if (knockbackCounter >= 2)
         {
-            Destroy(gameObject);
+
+            animator.SetBool("Dead", true);
+            StartCoroutine(DestroyAfterDelay(0.53f));
         }
         else if (knockbackCounter == 1)
         {
             animator.SetBool("Injured", true);
         }
 
-        StartCoroutine(Pause(knockbackDuration));
     }
 
-    private IEnumerator Pause(float duration)
+    private IEnumerator DestroyAfterDelay(float delay)
     {
-        yield return new WaitForSeconds(duration);
+        yield return new WaitForSeconds(delay);
+        Destroy(gameObject);
     }
 }
