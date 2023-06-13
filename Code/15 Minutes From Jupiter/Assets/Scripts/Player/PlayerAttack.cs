@@ -32,12 +32,13 @@ public class PlayerAttack : MonoBehaviour
     {
         // Update the attack cooldown timer
         attackCooldownTimer -= Time.deltaTime;
-       
+
+
 
         if (Input.GetMouseButtonDown(0) && !isRaycastLocked && attackCooldownTimer <= 0f)
         {
-            Vector3 hitPoint = new Vector3(0,0,0);
-            Vector2 direction = new Vector2(0,0);
+            Vector3 hitPoint = new Vector3(0, 0, 0);
+            Vector2 direction = new Vector2(0, 0);
 
             // Get the mouse position in the world
             Ray mousePosition = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -180,6 +181,15 @@ public class PlayerAttack : MonoBehaviour
                 }
             }
         }
+
+        if (isRaycastLocked && lockedEnemy == null)
+        {
+            // Unlock the raycast and return to following the mouse
+            isRaycastLocked = false;
+            lockedEnemy = null;
+        }
+
+
     }
 
     private void ApplyKnockbackVelocity(Rigidbody2D enemyRigidbody, Vector2 direction)

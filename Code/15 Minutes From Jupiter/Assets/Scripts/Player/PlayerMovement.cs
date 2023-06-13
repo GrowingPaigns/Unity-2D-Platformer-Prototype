@@ -388,9 +388,8 @@ public class PlayerMovement : MonoBehaviour
         Vector2 dashDirection = new Vector2();
         float knockbackSpeed = 1.2f;
 
-        GameObject enemy = GameObject.FindGameObjectWithTag("Enemy");
-        Collider2D enemyCollider = enemy.GetComponent<Collider2D>();
-        Rigidbody2D enemyRigidbody = enemy.GetComponent<Rigidbody2D>();
+       
+
 
         // Determine dash direction based on the keys held
         if (Input.GetKey(KeyCode.A))
@@ -445,11 +444,7 @@ public class PlayerMovement : MonoBehaviour
             elapsedTime = Time.time - startTime;
         }
 
-        if (enemyCollider != null && wallCheck.IsTouching(enemyCollider))
-        {
-            enemyRigidbody.velocity = Vector2.zero;
-            playerHitbox.enabled = true; // Re-enable the collider
-        }
+        
 
         trail.emitting = false;
         rb.gravityScale = originalGravity;

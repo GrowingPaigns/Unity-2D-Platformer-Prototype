@@ -19,7 +19,7 @@ public class EnemyMovement : MonoBehaviour
     private float waitTime = 0f;
     private float moveTime = 0f;
     private bool isDetectionEnabled = true;
-    private bool isKnockbackPaused = false;
+    public bool isKnockbackPaused = false;
     private float knockbackPauseTimer = 0f;
 
     private void Start()
@@ -176,10 +176,6 @@ public class EnemyMovement : MonoBehaviour
 
         return false;
     }
-
-
-
-
 
     private bool GroundCollision()
     {
