@@ -225,6 +225,11 @@ public class EnemyMovement : MonoBehaviour
         StartCoroutine(PauseKnockback(duration));
     }
 
+    public void EnableDetection()
+    {
+        isDetectionEnabled = true;
+    }
+
     private IEnumerator PauseKnockback(float duration)
     {
         isKnockbackPaused = true;

@@ -17,6 +17,7 @@ public class PlayerAttack : MonoBehaviour
     public GameObject lockedEnemy;
     private float attackCooldownTimer = 0f;
 
+
     private Plane cursorPlane; // The plane on which the cursor will be positioned
 
     void Start()
@@ -33,6 +34,20 @@ public class PlayerAttack : MonoBehaviour
         // Update the attack cooldown timer
         attackCooldownTimer -= Time.deltaTime;
 
+        if (Input.GetMouseButtonDown(0))
+        {
+            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 playerToMouse = mousePosition - transform.position;
+            playerToMouse.z = 0f; // Ensure the z-component is zero
+
+            float moveDistance = 0.5f; // Adjust this value to control the movement distance
+
+            // Calculate the target position to move towards
+            Vector3 targetPosition = transform.position + playerToMouse.normalized * moveDistance;
+
+            // Move the player towards the target position using a smooth movement
+            StartCoroutine(MoveTowards(targetPosition));
+        }
 
 
         if (Input.GetMouseButtonDown(0) && !isRaycastLocked && attackCooldownTimer <= 0f)
@@ -171,9 +186,11 @@ public class PlayerAttack : MonoBehaviour
 
                     // Apply knockback velocity to the locked enemy
                     Rigidbody2D enemyRigidbody = lockedEnemy.GetComponent<Rigidbody2D>();
+                    EnemyMovement enemyMovement = enemyRigidbody.GetComponent<EnemyMovement>();
                     if (enemyRigidbody != null)
                     {
                         ApplyKnockbackVelocity(enemyRigidbody, direction);
+                        enemyMovement.EnableDetection();
                     }
 
                     // Start the attack cooldown
@@ -192,6 +209,8 @@ public class PlayerAttack : MonoBehaviour
 
     }
 
+
+
     private void ApplyKnockbackVelocity(Rigidbody2D enemyRigidbody, Vector2 direction)
     {
         // Reset the knockback timer and activate knockback effect
@@ -202,25 +221,7 @@ public class PlayerAttack : MonoBehaviour
         enemyRigidbody.velocity = Vector2.zero;
 
         // Calculate knockback velocity based on player position relative to the enemy
-        Vector2 knockbackVelocity;
-        float playerY = transform.position.y;
-        float enemyY = enemyRigidbody.transform.position.y;
-
-        if (playerY >= enemyY)
-        {
-            // Player is above the enemy, launch enemy downwards
-            knockbackVelocity = new Vector2(direction.x, 1f) * knockbackSpeed;
-        }
-        else if (playerY <= enemyY)
-        {
-            // Player is below the enemy, launch enemy upwards
-            knockbackVelocity = new Vector2(direction.x, 1f) * knockbackSpeed;
-        }
-        else
-        {
-            // Player is horizontal to the enemy, launch enemy up and away
-            knockbackVelocity = direction * knockbackSpeed;
-        }
+        Vector2 knockbackVelocity = direction * knockbackSpeed;
 
         enemyRigidbody.velocity = knockbackVelocity;
 
@@ -231,4 +232,31 @@ public class PlayerAttack : MonoBehaviour
             enemyMovement.DisableDetection(knockbackDuration);
         }
     }
+
+    private IEnumerator MoveTowards(Vector3 targetPosition)
+    {
+        float duration = 0.05f; // Adjust this value to control the movement duration
+        float elapsedTime = 0f;
+        Vector3 startingPosition = transform.position;
+
+        while (elapsedTime < duration)
+        {
+            // Calculate the progress (0 to 1) based on the elapsed time and duration
+            float progress = elapsedTime / duration;
+
+            // Calculate the current position based on the starting and target positions
+            Vector3 currentPosition = Vector3.Lerp(startingPosition, targetPosition, progress);
+
+            // Move the player to the current position
+            playerMovement.GetComponent<Rigidbody2D>().MovePosition(currentPosition);
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        // Stop the player's movement by setting the velocity to zero
+        playerMovement.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
+    }
+
+
 }

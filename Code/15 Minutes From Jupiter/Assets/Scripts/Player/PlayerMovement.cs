@@ -79,9 +79,10 @@ public class PlayerMovement : MonoBehaviour
     private bool canDash = true;     // Determines if a player can dash
     private bool isDashing = false;  // Switches on and off the dash mechanic in combo with the dash cooldown 
     private bool isSlowMotion = false;  // Slows down time while holding down the dash button
+    private int dashCount = 0;
     /* --------------------------------- */
 
-    
+
 
 
 
@@ -153,10 +154,12 @@ public class PlayerMovement : MonoBehaviour
 
         if (GroundCollision()) // Check if the player is grounded
         {
+            dashCount = 0;
             // Reset the isWallJumping flag(s) and the coyote time variable
             coyoteTimeCounter = coyoteTime;
             isWallJumping = false;
             animator.SetBool("WallJumping", false);
+            canDash = true;
         }
         else
         {
@@ -168,6 +171,8 @@ public class PlayerMovement : MonoBehaviour
             isWallJumping = false;
             animator.SetBool("WallJumping", false); // set the default animation state (no input) - sliding animation
         }
+
+        
 
         animator.SetBool("Grounded", GroundCollision()); // used in combo with vert speed to switch between falling
         animator.SetFloat("VertSpeed", rb.velocity.y);   // and other states (idle, running)
@@ -209,8 +214,9 @@ public class PlayerMovement : MonoBehaviour
         {
             StartCoroutine(Dash());
             isSlowMotion = false;
-    
+
         }
+
 
 
     }
@@ -298,6 +304,7 @@ public class PlayerMovement : MonoBehaviour
             {
 
                 rb.velocity = new Vector2(horizontalInput * walkSpeed, rb.velocity.y);
+                isWallSliding = true;
             }
             else // Wall slide behavior
             {
@@ -385,37 +392,51 @@ public class PlayerMovement : MonoBehaviour
 
         float originalGravity = rb.gravityScale;
 
-        Vector2 dashDirection = new Vector2();
+        Vector2 dashDirection = Vector2.zero;
         float knockbackSpeed = 1.2f;
 
-       
+        // Flag to check if the dash direction has been set
+        bool dashDirectionSet = false;
 
-
-        // Determine dash direction based on the keys held
         if (Input.GetKey(KeyCode.A))
         {
             dashDirection.x = -horizDashPower; // Dash to the left
+            dashDirectionSet = true;
         }
         else if (Input.GetKey(KeyCode.D))
         {
             dashDirection.x = horizDashPower; // Dash to the right
-        }
-        else
-        {
-            dashDirection.x = 0;
+            dashDirectionSet = true;
         }
 
         if (Input.GetKey(KeyCode.W))
         {
             dashDirection.y = vertDashPower; // Dash upwards
+            dashDirectionSet = true;
         }
         else if (Input.GetKey(KeyCode.S) && !GroundCollision())
         {
             dashDirection.y = -vertDashPower * 2; // Dash downwards
+            dashDirectionSet = true;
+        }
+
+        if (dashDirectionSet)
+        {
+            dashCount++; // Increment dashCount only once if a dash direction is set
         }
         else
         {
-            dashDirection.y = 0;
+            canDash = false;
+            isDashing = false;
+            yield break;
+        }
+        if (dashCount > 3)
+        {
+
+            canDash = false;
+            isDashing = false;
+            yield break;
+
         }
 
         rb.gravityScale = 0f;
