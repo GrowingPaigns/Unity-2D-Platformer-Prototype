@@ -10,8 +10,8 @@ public class OptionsMenu : MonoBehaviour
     public List<ResItem> resolutions = new List<ResItem>();
     private int selectedResolution;
     
-    public AudioMixer mixer;
-    public Slider masterSlider, musicSlider, sfxSlider;
+    //public AudioMixer mixer;
+    //public Slider masterSlider, musicSlider, sfxSlider;
 
 
     // Start is called before the first frame update
@@ -42,13 +42,13 @@ public class OptionsMenu : MonoBehaviour
             UpdateResLabel();
 
         }
-        float vol = 0f;
-        mixer.GetFloat("MasterVol", out vol);
-        masterSlider.value = vol;
-        mixer.GetFloat("MusicVol", out vol);
-        musicSlider.value = vol;
-        mixer.GetFloat("SFXVol", out vol);
-        sfxSlider.value = vol;
+        //float vol = 0f;
+        //mixer.GetFloat("MasterVol", out vol);
+        //masterSlider.value = vol;
+        //mixer.GetFloat("MusicVol", out vol);
+        //musicSlider.value = vol;
+        //mixer.GetFloat("SFXVol", out vol);
+        //sfxSlider.value = vol;
     }
 
 
@@ -88,18 +88,18 @@ public class OptionsMenu : MonoBehaviour
 
     public void SetMasterVolume()
     {
-        mixer.SetFloat("MasterVol", masterSlider.value);
-        PlayerPrefs.SetFloat("MasterVol", masterSlider.value);
+        //mixer.SetFloat("MasterVol", masterSlider.value);
+        //PlayerPrefs.SetFloat("MasterVol", masterSlider.value);
     }
     public void SetMusicVolume()
     {
-        mixer.SetFloat("MusicVol", musicSlider.value);
-        PlayerPrefs.SetFloat("MusicVol", musicSlider.value);
+        //mixer.SetFloat("MusicVol", musicSlider.value);
+        //PlayerPrefs.SetFloat("MusicVol", musicSlider.value);
     }
     public void SetSFXVolume()
     {
-        mixer.SetFloat("SFXVol", sfxSlider.value);
-        PlayerPrefs.SetFloat("SFXVol", sfxSlider.value);
+        //mixer.SetFloat("SFXVol", sfxSlider.value);
+        //PlayerPrefs.SetFloat("SFXVol", sfxSlider.value);
     }
 
 
