@@ -15,6 +15,7 @@ public class EnemyMovement : MonoBehaviour
     [SerializeField] private LayerMask wallLayer;
     [SerializeField] private float raycastDistance;
 
+    private SmallEnemyHealth health;
     private Rigidbody2D rb;
     private bool isMovingRight = true;
     private bool isWaiting = false;
@@ -28,6 +29,8 @@ public class EnemyMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         SetRandomMovementTime();
+
+        health = GetComponent<SmallEnemyHealth>();
     }
 
     private void Update()
@@ -35,11 +38,13 @@ public class EnemyMovement : MonoBehaviour
         if (isKnockbackPaused)
         {
             knockbackPauseTimer -= Time.deltaTime;
-            if (knockbackPauseTimer <= 0f)
+
+            if (knockbackPauseTimer <= 0f && GroundCollision())
             {
                 isKnockbackPaused = false;
                 isDetectionEnabled = true;
                 rb.velocity = Vector2.zero;
+                EnableMovement();
             }
             else
             {
@@ -57,8 +62,9 @@ public class EnemyMovement : MonoBehaviour
                 Flip();
             }
         }
-        else
+        if (!isWaiting && !isKnockbackPaused)
         {
+            EnableMovement();
             if (!GroundCollision())
             {
                 Flip();
@@ -73,9 +79,19 @@ public class EnemyMovement : MonoBehaviour
             {
                 GameObject player = GameObject.FindGameObjectWithTag("Player");
                 Vector3 direction = player.transform.position - transform.position;
-                rb.velocity = new Vector2(direction.normalized.x * chaseSpeed, rb.velocity.y);
-                animator.SetFloat("HorizSpeed", Mathf.Abs(rb.velocity.x));
-                FlipTowardsMovement();
+
+                if (health.knockbackCounter < 1)
+                {
+                    rb.velocity = new Vector2(direction.normalized.x * chaseSpeed, rb.velocity.y);
+                    animator.SetFloat("HorizSpeed", Mathf.Abs(rb.velocity.x));
+                    FlipTowardsMovement();
+                } else
+                {
+                    rb.velocity = new Vector2(direction.normalized.x * chaseSpeed/2, rb.velocity.y);
+                    animator.SetFloat("HorizSpeed", Mathf.Abs(rb.velocity.x));
+                    FlipTowardsMovement();
+                }
+                
             }
             else if (GroundCollision())
             {
@@ -89,8 +105,16 @@ public class EnemyMovement : MonoBehaviour
                 }
                 else
                 {
-                    rb.velocity = new Vector2((isMovingRight ? 1 : -1) * walkSpeed, rb.velocity.y);
-                    animator.SetFloat("HorizSpeed", Mathf.Abs(rb.velocity.x));
+                    if (health.knockbackCounter < 1)
+                    {
+                        rb.velocity = new Vector2((isMovingRight ? 1 : -1) * walkSpeed, rb.velocity.y);
+                        animator.SetFloat("HorizSpeed", Mathf.Abs(rb.velocity.x));
+                    } else
+                    {
+                        rb.velocity = new Vector2((isMovingRight ? 1 : -1) * walkSpeed/2, rb.velocity.y);
+                        animator.SetFloat("HorizSpeed", Mathf.Abs(rb.velocity.x));
+                    }
+                    
                 }
             }
         }
@@ -145,9 +169,6 @@ public class EnemyMovement : MonoBehaviour
                                 playerDetected = true;
                                 break;
                             }
-                        } else
-                        {
-                            return false;
                         }
                     }
                 }
@@ -156,6 +177,8 @@ public class EnemyMovement : MonoBehaviour
                 {
                     return true;
                 }
+
+                return false; // Move this line outside the foreach loop
             }
         }
 
@@ -237,6 +260,20 @@ public class EnemyMovement : MonoBehaviour
         yield return new WaitForSeconds(duration);
     }
 
+    // Disable the enemy's movement
+    public void DisableMovement()
+    {
+        isKnockbackPaused = true;
+        knockbackPauseTimer = 0.33f; // Set the duration of knockback pause
+
+    }
+
+    // Enable the enemy's movement
+    public void EnableMovement()
+    {
+        isKnockbackPaused = false;
+        isDetectionEnabled = true;
+    }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {

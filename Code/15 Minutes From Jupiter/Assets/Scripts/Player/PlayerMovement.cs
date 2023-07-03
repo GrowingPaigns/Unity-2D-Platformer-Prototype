@@ -55,6 +55,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float horizDashPower;
     [SerializeField] private float vertDashPower;
     [SerializeField] private float dashTime;
+    [SerializeField] private Transform attackTranform;
 
 
     /* -- Private Fields -- 
@@ -65,8 +66,8 @@ public class PlayerMovement : MonoBehaviour
     private bool isSprinting;        // Used to change between 
     private bool canMove = true;     // Used in wall jumping (necessary to make th player jump)
 
-    private bool facingRight = true; // Used to flip the character model
-    private float horizontalInput;   // carries the values to determine L/R movement
+    public bool facingRight = true; // Used to flip the character model
+    public float horizontalInput;   // carries the values to determine L/R movement
     private float verticalInput;     // carries the values to determine U/D movement
 
     private bool isWallSliding;      // checks if a character has collided with a wall + is 
@@ -248,11 +249,13 @@ public class PlayerMovement : MonoBehaviour
     /* Handles flippage of the character */
     public void Flip()
     {
-        Vector3 currentScale = gameObject.transform.localScale;
+        // Invert the sign of the scale's X component
+        Vector3 currentScale = transform.localScale;
         currentScale.x *= -1;
-        gameObject.transform.localScale = currentScale;
-
+        this.transform.localScale = currentScale;
+        // Reverse the facing direction flag
         facingRight = !facingRight;
+
     }
 
 
@@ -379,10 +382,6 @@ public class PlayerMovement : MonoBehaviour
         isWallJumping = false;
         animator.SetBool("WallJumping", isWallJumping);
     }
-
-
-
-
 
 
     private IEnumerator Dash()

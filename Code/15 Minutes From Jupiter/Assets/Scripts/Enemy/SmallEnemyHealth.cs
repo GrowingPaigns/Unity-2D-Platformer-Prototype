@@ -2,29 +2,37 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+
+
+The line Debug.Log("PlayerAttack is not null"); is not being reached at all
+
+*/
+
 public class SmallEnemyHealth : MonoBehaviour
 {
-    private int knockbackCounter = 0;
+    public int knockbackCounter = 0;
     private Animator animator;
-    private EnemyMovement movement;
-    [SerializeField] private float knockbackDuration;
+    private PlayerAttack playerAttack;
+
+    private Plane cursorPlane; // The plane on which the cursor will be positioned
 
     private void Start()
     {
-        movement = GetComponent<EnemyMovement>();
+        cursorPlane = new Plane(Vector3.forward, Vector3.zero); // Define the cursor plane (e.g., XY plane)
+        playerAttack = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerAttack>();
         animator = GetComponent<Animator>();
 
-        
+        if (playerAttack == null)
+        {
+            Debug.Log("PlayerAttack component is missing!");
+        }
     }
 
     private void Update()
     {
-        if (movement.isKnockbackPaused)
-        {
-            Debug.Log("Knockback is paused");
-            IncrementKnockbackCounter();
-            movement.isKnockbackPaused = false;
-        }
+        playerAttack = GetComponent<PlayerAttack>();
+
     }
 
     public void IncrementKnockbackCounter()

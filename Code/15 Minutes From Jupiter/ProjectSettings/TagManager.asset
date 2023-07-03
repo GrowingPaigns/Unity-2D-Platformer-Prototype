@@ -8,6 +8,8 @@ TagManager:
   - Wall
   - Enemy
   - Tile
+  - Music
+  - Weapon
   layers:
   - Default
   - TransparentFX
