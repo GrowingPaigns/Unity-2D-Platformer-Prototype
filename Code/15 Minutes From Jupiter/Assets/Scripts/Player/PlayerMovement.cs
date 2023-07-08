@@ -67,7 +67,7 @@ public class PlayerMovement : MonoBehaviour
     private bool canMove = true;     // Used in wall jumping (necessary to make th player jump)
 
     public bool facingRight = true; // Used to flip the character model
-    public float horizontalInput;   // carries the values to determine L/R movement
+    private float horizontalInput;   // carries the values to determine L/R movement
     private float verticalInput;     // carries the values to determine U/D movement
 
     private bool isWallSliding;      // checks if a character has collided with a wall + is 
@@ -78,7 +78,7 @@ public class PlayerMovement : MonoBehaviour
     private float coyoteTimeCounter; // Counts down the coyote time jump
 
     private bool canDash = true;     // Determines if a player can dash
-    private bool isDashing = false;  // Switches on and off the dash mechanic in combo with the dash cooldown 
+    public bool isDashing = false;  // Switches on and off the dash mechanic in combo with the dash cooldown 
     private bool isSlowMotion = false;  // Slows down time while holding down the dash button
     private int dashCount = 0;
     /* --------------------------------- */
@@ -223,7 +223,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
     /* Checks if the Player is standing on a surface */
-    private bool GroundCollision()
+    public bool GroundCollision()
     {
         // Check if the player is touching the ground layer
         bool grounded = groundCheck.IsTouchingLayers(groundLayer);
@@ -372,7 +372,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private IEnumerator PauseInputForDuration(float duration) // pause input for wall jump
+    public IEnumerator PauseInputForDuration(float duration) // pause input for wall jump
     {
         canMove = false; // Disable player movement
 

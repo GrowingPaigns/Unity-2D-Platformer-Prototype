@@ -178,8 +178,9 @@ public class EnemyMovement : MonoBehaviour
                     return true;
                 }
 
-                return false; // Move this line outside the foreach loop
             }
+
+            return false; // Move this line outside the foreach loop
         }
 
         return false;

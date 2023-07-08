@@ -6,8 +6,12 @@ using UnityEngine.Tilemaps;
 public class PlayerAttack : MonoBehaviour
 {
     private PlayerMovement playerMovement;
+    [SerializeField] private float horizJumpForce;
+    [SerializeField] private float vertJumpForce;
+    private Rigidbody2D playerRigidbody;
     [SerializeField] private float maxDistance;
     [SerializeField] private float attackCooldown;
+    [SerializeField] private float delay;
     [SerializeField] private Animator animator;         // Used to play different animations based on movement
     [SerializeField] private float knockbackSpeed;
     public bool isRaycastLocked = false;
@@ -24,10 +28,12 @@ public class PlayerAttack : MonoBehaviour
     private Plane cursorPlane; // The plane on which the cursor will be positioned
 
 
+
     void Start()
     {
         // Initialize playerMovement reference if needed
         playerMovement = GetComponent<PlayerMovement>();
+        playerRigidbody = GetComponent<Rigidbody2D>();
         cursorPlane = new Plane(Vector3.forward, Vector3.zero); // Define the cursor plane (e.g., XY plane)
         
         // Get the main camera reference
@@ -41,9 +47,16 @@ public class PlayerAttack : MonoBehaviour
         // Update the attack cooldown timer
         attackCooldownTimer -= Time.deltaTime;
 
+        if (playerMovement.isDashing)
+        {
+            // Skip reading horizontal input while attacking
+            return;
+        }
+
         if (Input.GetMouseButtonDown(0) && !isRaycastLocked && attackCooldownTimer <= 0f)
         {
             animator.SetBool("Attacking", true);
+            playerMovement.isDashing = true;
             Vector3 hitPoint = new Vector3(0, 0, 0);
             Vector2 direction = new Vector2(0, 0);
 
@@ -61,6 +74,33 @@ public class PlayerAttack : MonoBehaviour
             // Normalize the direction to get a unit vector
             direction.Normalize();
 
+            
+
+            playerMovement.PauseInputForDuration(delay);
+            // Apply the jump force to the player's Rigidbody2D
+
+            if (direction.y >= 0.80f)
+            {
+                playerRigidbody.AddForce(new Vector2(direction.x * horizJumpForce, vertJumpForce * 2), ForceMode2D.Impulse);
+            } else
+            {
+                playerRigidbody.AddForce(new Vector2(direction.x * horizJumpForce, vertJumpForce), ForceMode2D.Impulse);
+            }
+
+            if (direction.x < 0 && playerMovement.facingRight)
+            {
+                playerMovement.Flip();
+            } else if (direction.x > 0 && !playerMovement.facingRight)
+            {
+                playerMovement.Flip();
+            }
+            
+            Debug.Log(direction);
+
+
+
+
+
             // Ignore the player's collider when performing the raycast
             int layerMask = ~(1 << gameObject.layer);
 
@@ -70,56 +110,65 @@ public class PlayerAttack : MonoBehaviour
             // Adjust the distance based on the maximum distance
             distance = Mathf.Clamp(distance, 0f, maxDistance);
 
-            // Cast a ray from the player towards the mouse direction with the adjusted distance
-            RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, direction, distance, layerMask);
+            // Cast a wider ray by dividing it into segments
+            int numSegments = 1; // Adjust the number of segments as desired
+            float segmentWidth = 1f; // Adjust the segment width as desired
+            float halfWidth = (numSegments - 1) * segmentWidth / 2f;
+            Vector2 startPos = transform.position - transform.up * halfWidth;
 
-            // Draw the raycast for debugging purposes
-            Debug.DrawRay(transform.position, direction * distance, Color.red, 0.1f);
-
-            // Process the raycast hits
-            foreach (RaycastHit2D hit in hits)
+            for (int i = 0; i < numSegments; i++)
             {
-                // Ignore child objects of the hit enemy
-                if (hit.collider.gameObject.CompareTag("Enemy") && hit.transform.parent == null)
+                Vector2 castPosition = startPos + (Vector2)transform.up * i * segmentWidth;
+
+                // Cast a ray from the player towards the mouse direction with the adjusted distance
+                RaycastHit2D[] hits = Physics2D.RaycastAll(castPosition, direction, distance, layerMask);
+
+                // Draw the raycast for debugging purposes
+                Debug.DrawRay(castPosition, direction * distance, Color.red, 0.1f);
+
+                // Process the raycast hits
+                foreach (RaycastHit2D hit in hits)
                 {
-                    // Perform actions based on the hit object
-                    hitObject = hit.collider.gameObject;
-                    Debug.Log("Hit object: " + hitObject.name);
-
-                    // Apply knockback velocity to the locked enemy
-                    Rigidbody2D enemyRigidbody = hit.collider.gameObject.GetComponent<Rigidbody2D>();
-                    EnemyMovement enemyMovement = hit.collider.gameObject.GetComponent<EnemyMovement>();
-                    SmallEnemyHealth enemyHealth = hit.collider.gameObject.GetComponent<SmallEnemyHealth>();
-                    if (enemyRigidbody != null)
+                    // Ignore child objects of the hit enemy
+                    if (hit.collider.gameObject.CompareTag("Enemy") && hit.transform.parent == null)
                     {
-                        Debug.Log("Knockback is paused");
-                        enemyMovement.DisableMovement();
+                        // Perform actions based on the hit object
+                        hitObject = hit.collider.gameObject;
+                        Debug.Log("Hit object: " + hitObject.name);
 
-                        // Apply knockback velocity to the enemy
-                        Vector2 knockbackDirection = enemyRigidbody.transform.position - transform.position;
-                        knockbackDirection.Normalize();
-                        // Calculate the knockback force by multiplying the knockback direction with the knockback speed
-                        Vector2 knockbackForce = knockbackDirection * knockbackSpeed;
-                        // Apply the knockback force to the enemy's Rigidbody2D
-                        enemyRigidbody.velocity = knockbackForce;
-                        // Apply an upward force to the enemy
-                        Vector2 upwardForce = Vector2.up * (knockbackSpeed/2);
-                        enemyRigidbody.AddForce(upwardForce, ForceMode2D.Impulse);
-                        // Increment the knockback counter, disable movement, etc.
-                        enemyHealth.IncrementKnockbackCounter();
-                        enemyMovement.DisableDetection(0.3f);
-                        enemyMovement.isKnockbackPaused = true;
-                        Debug.Log(enemyMovement.isKnockbackPaused);
-                        // Shake the camera
-                        StartCoroutine(ShakeCamera(cameraShakeDuration, cameraShakeMagnitude));
-                        
+                        // Apply knockback velocity to the locked enemy
+                        Rigidbody2D enemyRigidbody = hit.collider.gameObject.GetComponent<Rigidbody2D>();
+                        EnemyMovement enemyMovement = hit.collider.gameObject.GetComponent<EnemyMovement>();
+                        SmallEnemyHealth enemyHealth = hit.collider.gameObject.GetComponent<SmallEnemyHealth>();
+                        if (enemyRigidbody != null)
+                        {
+                            Debug.Log("Knockback is paused");
+                            enemyMovement.DisableMovement();
+
+                            // Apply knockback velocity to the enemy
+                            Vector2 knockbackDirection = enemyRigidbody.transform.position - transform.position;
+                            knockbackDirection.Normalize();
+                            // Calculate the knockback force by multiplying the knockback direction with the knockback speed
+                            Vector2 knockbackForce = knockbackDirection * knockbackSpeed;
+                            // Apply the knockback force to the enemy's Rigidbody2D
+                            enemyRigidbody.velocity = knockbackForce;
+                            // Apply an upward force to the enemy
+                            Vector2 upwardForce = Vector2.up * (knockbackSpeed / 2);
+                            enemyRigidbody.AddForce(upwardForce, ForceMode2D.Impulse);
+                            // Increment the knockback counter, disable movement, etc.
+                            enemyHealth.IncrementKnockbackCounter();
+                            enemyMovement.DisableDetection(delay);
+                            enemyMovement.isKnockbackPaused = true;
+                            Debug.Log(enemyMovement.isKnockbackPaused);
+                            // Shake the camera
+                            StartCoroutine(ShakeCamera(cameraShakeDuration, cameraShakeMagnitude));
+                        }
                     }
                 }
             }
 
-            // Start the attack cooldown
-            attackCooldownTimer = attackCooldown;
             StartCoroutine(ResetAttackAnimation());
+            attackCooldownTimer = attackCooldown;
         }
 
         if (Input.GetKeyDown(KeyCode.Q))
@@ -175,6 +224,28 @@ public class PlayerAttack : MonoBehaviour
             Vector2 direction = lockedEnemy.transform.position - transform.position;
             direction.Normalize();
 
+            playerMovement.PauseInputForDuration(delay);
+            // Apply the jump force to the player's Rigidbody2D
+
+            if (direction.y >= 0.80f)
+            {
+                playerRigidbody.AddForce(new Vector2(direction.x * horizJumpForce, vertJumpForce * 2), ForceMode2D.Impulse);
+            }
+            else
+            {
+                playerRigidbody.AddForce(new Vector2(direction.x * horizJumpForce, vertJumpForce), ForceMode2D.Impulse);
+            }
+
+            if (direction.x < 0 && playerMovement.facingRight)
+            {
+                playerMovement.Flip();
+            }
+            else if (direction.x > 0 && !playerMovement.facingRight)
+            {
+                playerMovement.Flip();
+            }
+
+
             // Cast a ray from the player towards the locked enemy's position
             RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, direction, maxDistance);
 
@@ -222,7 +293,7 @@ public class PlayerAttack : MonoBehaviour
                         enemyRigidbody.AddForce(upwardForce, ForceMode2D.Impulse);
                         // Increment the knockback counter, disable movement, etc.
                         enemyHealth.IncrementKnockbackCounter();
-                        enemyMovement.DisableDetection(0.3f);
+                        enemyMovement.DisableDetection(delay);
                         enemyMovement.isKnockbackPaused = true;
                         Debug.Log(enemyMovement.isKnockbackPaused);
                         // Shake the camera
@@ -273,7 +344,8 @@ public class PlayerAttack : MonoBehaviour
 
     private IEnumerator ResetAttackAnimation()
     {
-        yield return new WaitForSeconds(0.1f); // Adjust the delay as needed
+        yield return new WaitForSeconds(delay); // Adjust the delay as needed
         animator.SetBool("Attacking", false);
+        playerMovement.isDashing = false;
     }
 }
