@@ -36,7 +36,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;     // Objects with the 'ground' layer we want to check for
     [SerializeField] private BoxCollider2D wallCheck;   // Used to check if we are next to a wall
     [SerializeField] private LayerMask wallLayer;       // Objects with the 'wall' layer we want to check for
-    [SerializeField] private BoxCollider2D playerHitbox;// 
+    
     [SerializeField] private BoxCollider2D dashCheck;   // 
 
     [SerializeField] private float wallJumpingTime;     // Time after exiting the wall that the player can still wall jump
@@ -58,13 +58,14 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform attackTranform;
 
 
+
     /* -- Private Fields -- 
      * Used only within this class
      */
     private Rigidbody2D rb;          // determines the physics of the player
 
     private bool isSprinting;        // Used to change between 
-    private bool canMove = true;     // Used in wall jumping (necessary to make th player jump)
+    public bool canMove = true;     // Used in wall jumping (necessary to make th player jump)
 
     public bool facingRight = true; // Used to flip the character model
     private float horizontalInput;   // carries the values to determine L/R movement
@@ -79,8 +80,11 @@ public class PlayerMovement : MonoBehaviour
 
     private bool canDash = true;     // Determines if a player can dash
     public bool isDashing = false;  // Switches on and off the dash mechanic in combo with the dash cooldown 
-    private bool isSlowMotion = false;  // Slows down time while holding down the dash button
+   
     private int dashCount = 0;
+
+    private GameObject[] enemies;
+
     /* --------------------------------- */
 
 
@@ -96,6 +100,9 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
     }
 
+
+
+
     /* Called at fixed time intervals, typically every 0.02 seconds (or 50 times per second 
      * [can be changed in settings]). 
      * 
@@ -105,16 +112,17 @@ public class PlayerMovement : MonoBehaviour
      */
     private void FixedUpdate()
     {
-        if (isSlowMotion) // slow time when player is holding down RMB
-        {
-            Time.timeScale = slowMotionTimeScale;
-        }
-        else
-        {
-            Time.timeScale = 1f;
-        }
+       
+
+
+        enemies = GameObject.FindGameObjectsWithTag("Enemy");
 
         if (isDashing) // if the player is dashing dont listen for any input
+        {
+            return;
+        }
+
+        if (!canMove)
         {
             return;
         }
@@ -152,7 +160,6 @@ public class PlayerMovement : MonoBehaviour
             Flip();
         }
 
-
         if (GroundCollision()) // Check if the player is grounded
         {
             dashCount = 0;
@@ -161,19 +168,28 @@ public class PlayerMovement : MonoBehaviour
             isWallJumping = false;
             animator.SetBool("WallJumping", false);
             canDash = true;
+            canMove = true;
+
+            foreach (GameObject enemy in enemies)
+            {
+                Physics2D.IgnoreCollision(enemy.GetComponent<Collider2D>(), GetComponent<Collider2D>(), false);
+            }
         }
         else
         {
             coyoteTimeCounter -= Time.fixedDeltaTime;
         }
 
-        if (WallCollision()) // if the player collides with a wall... 
+
+        if (WallCollision())
         {
+            animator.SetBool("WallJumping", false);
+            
             isWallJumping = false;
-            animator.SetBool("WallJumping", false); // set the default animation state (no input) - sliding animation
+            canMove = true;
         }
 
-        
+
 
         animator.SetBool("Grounded", GroundCollision()); // used in combo with vert speed to switch between falling
         animator.SetFloat("VertSpeed", rb.velocity.y);   // and other states (idle, running)
@@ -209,12 +225,14 @@ public class PlayerMovement : MonoBehaviour
         // call outside functions to handle wall slide/jump
         WallSlide();
         WallJump();
+        if (isWallSliding)
+        {
+            isWallJumping = false;
+        }
 
-        
         if (Input.GetMouseButtonDown(1) && canDash) // perform dash
         {
             StartCoroutine(Dash());
-            isSlowMotion = false;
 
         }
 
@@ -241,10 +259,6 @@ public class PlayerMovement : MonoBehaviour
         return wallCheck.IsTouchingLayers(wallLayer);
     }
 
-    private bool DashCollision()
-    {
-        return dashCheck.IsTouchingLayers(wallLayer) || dashCheck.IsTouchingLayers(groundLayer);
-    }
 
     /* Handles flippage of the character */
     public void Flip()
@@ -269,9 +283,9 @@ public class PlayerMovement : MonoBehaviour
         {
             GetComponent<SpriteRenderer>().flipX = true;
 
-            if (horizontalInput != 0)
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
             {
-                if (Input.GetKey(KeyCode.W) && horizontalInput != 0) // wall climbing with horizontal input
+                if (Input.GetKey(KeyCode.W)) // wall climbing with horizontal input
                 {
                     isWallSliding = true;
                     rb.velocity = new Vector2(rb.velocity.x, wallClimbingSpeed);
@@ -281,18 +295,16 @@ public class PlayerMovement : MonoBehaviour
                         rb.velocity = new Vector2(horizontalInput * walkSpeed, rb.velocity.y);
                     }
 
-                }
+                } 
                 else
                 {
                     isWallSliding = true;
                     rb.velocity = new Vector2(rb.velocity.x, Mathf.Clamp(rb.velocity.y, -wallSlidingSpeed, float.MaxValue));
-
                 }
 
             }
-            else if (horizontalInput == 0 && Input.GetKey(KeyCode.W)) // wall climbing without horizontal input
+            else if (Input.GetKey(KeyCode.W)) // wall climbing with horizontal input
             {
-
                 isWallSliding = true;
                 rb.velocity = new Vector2(rb.velocity.x, wallClimbingSpeed);
 
@@ -301,18 +313,16 @@ public class PlayerMovement : MonoBehaviour
                     rb.velocity = new Vector2(horizontalInput * walkSpeed, rb.velocity.y);
                 }
 
-
             }
             else if (Input.GetKey(KeyCode.S)) // ... drops the player at normal speed instead of sliding
             {
 
                 rb.velocity = new Vector2(horizontalInput * walkSpeed, rb.velocity.y);
-                isWallSliding = true;
+                isWallSliding = false;
             }
             else // Wall slide behavior
             {
-                isWallSliding = true;
-                rb.velocity = new Vector2(rb.velocity.x, Mathf.Clamp(rb.velocity.y, -wallSlidingSpeed, float.MaxValue));
+                isWallSliding = false;
 
 
             }
@@ -337,8 +347,6 @@ public class PlayerMovement : MonoBehaviour
             // set direction opposite of current player x direction
             wallJumpingDirection = -transform.localScale.x;
             wallJumpCounter = wallJumpingTime;
-
-
         }
         else
         {
@@ -360,27 +368,34 @@ public class PlayerMovement : MonoBehaviour
             }
 
             Debug.Log("WallJumpPower " + wallJumpPower);
+            // Disable player input for the duration of wallJumpDuration
 
+            
+            canMove = false; // Enable player movement again
             rb.velocity = new Vector2(wallJumpingDirection * wallJumpPower.x, wallJumpPower.y);
-            Debug.Log("Velocity: " + rb.velocity);
-            // Disable player input for the duration of walljumpingDuration
             StartCoroutine(PauseInputForDuration(wallJumpDuration));
-        }
-        else if (Input.GetKeyDown(KeyCode.Space) && wallJumpCounter > 0f)
-        {
-            // temp code
+            
+
+            Debug.Log("Direction + Power.x: " + wallJumpingDirection * wallJumpPower.x + " Power.y " + wallJumpPower.y);
+
+            
+
         }
     }
 
     public IEnumerator PauseInputForDuration(float duration) // pause input for wall jump
     {
-        canMove = false; // Disable player movement
+        
 
-        yield return new WaitForSecondsRealtime(duration);
+        yield return new WaitForSeconds(duration);
 
-        canMove = true; // Enable player movement again
+        
         isWallJumping = false;
         animator.SetBool("WallJumping", isWallJumping);
+        canMove = true; // Enable player movement again
+
+        
+
     }
 
 
@@ -389,10 +404,16 @@ public class PlayerMovement : MonoBehaviour
         canDash = false;
         isDashing = true;
 
+        // Ignore collisions with objects tagged as "Enemy"
+        
+        foreach (GameObject enemy in enemies)
+        {
+            Physics2D.IgnoreCollision(enemy.GetComponent<Collider2D>(), GetComponent<Collider2D>(), true);
+        }
+
         float originalGravity = rb.gravityScale;
 
         Vector2 dashDirection = Vector2.zero;
-        float knockbackSpeed = 1.2f;
 
         // Flag to check if the dash direction has been set
         bool dashDirectionSet = false;
@@ -422,6 +443,7 @@ public class PlayerMovement : MonoBehaviour
         if (dashDirectionSet)
         {
             dashCount++; // Increment dashCount only once if a dash direction is set
+
         }
         else
         {
@@ -429,33 +451,30 @@ public class PlayerMovement : MonoBehaviour
             isDashing = false;
             yield break;
         }
+
+
         if (dashCount > 3)
         {
-
-            canDash = false;
+            
+            canMove = true;
             isDashing = false;
-            yield break;
 
+
+            yield break;
         }
+
+
 
         rb.gravityScale = 0f;
         rb.velocity = new Vector2(dashDirection.x, dashDirection.y);
         trail.emitting = true;
-
-        
-
-        Vector2 knockbackVelocity = dashDirection * knockbackSpeed;
-        // Store the original collision settings of the player's collider
-        bool originalCollisionState = playerHitbox.enabled;
-
-        playerHitbox.enabled = false; // Disable the collider temporarily
 
         float startTime = Time.time;
         float elapsedTime = 0f;
 
         while (elapsedTime < dashTime)
         {
-            if (WallCollision() || DashCollision())
+            if (WallCollision() /*|| DashCollision()*/)
             {
                 break; // Exit the loop if WallCollision() is true
             }
@@ -464,16 +483,19 @@ public class PlayerMovement : MonoBehaviour
             elapsedTime = Time.time - startTime;
         }
 
+
+
         
 
         trail.emitting = false;
         rb.gravityScale = originalGravity;
+
         isDashing = false;
-
-        playerHitbox.enabled = originalCollisionState; // Restore the original collision state
-
         canDash = true;
+
+        
     }
+
 
 }
 

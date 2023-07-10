@@ -14,6 +14,7 @@ public class SmallEnemyHealth : MonoBehaviour
     public int knockbackCounter = 0;
     private Animator animator;
     private PlayerAttack playerAttack;
+    private BoxCollider2D boxCollider;
 
     private Plane cursorPlane; // The plane on which the cursor will be positioned
 
@@ -22,6 +23,7 @@ public class SmallEnemyHealth : MonoBehaviour
         cursorPlane = new Plane(Vector3.forward, Vector3.zero); // Define the cursor plane (e.g., XY plane)
         playerAttack = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerAttack>();
         animator = GetComponent<Animator>();
+        boxCollider = GetComponent<BoxCollider2D>();
 
         if (playerAttack == null)
         {
@@ -41,8 +43,9 @@ public class SmallEnemyHealth : MonoBehaviour
 
         if (knockbackCounter >= 2)
         {
-
+            boxCollider.enabled = false;
             animator.SetBool("Dead", true);
+            
             StartCoroutine(DestroyAfterDelay(0.53f));
         }
         else if (knockbackCounter == 1)

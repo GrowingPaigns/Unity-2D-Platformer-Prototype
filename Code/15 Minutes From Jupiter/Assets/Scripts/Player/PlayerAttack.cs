@@ -11,7 +11,6 @@ public class PlayerAttack : MonoBehaviour
     private Rigidbody2D playerRigidbody;
     [SerializeField] private float maxDistance;
     [SerializeField] private float attackCooldown;
-    [SerializeField] private float delay;
     [SerializeField] private Animator animator;         // Used to play different animations based on movement
     [SerializeField] private float knockbackSpeed;
     public bool isRaycastLocked = false;
@@ -76,7 +75,7 @@ public class PlayerAttack : MonoBehaviour
 
             
 
-            playerMovement.PauseInputForDuration(delay);
+            playerMovement.PauseInputForDuration(attackCooldown);
             // Apply the jump force to the player's Rigidbody2D
 
             if (direction.y >= 0.80f)
@@ -157,7 +156,7 @@ public class PlayerAttack : MonoBehaviour
                             enemyRigidbody.AddForce(upwardForce, ForceMode2D.Impulse);
                             // Increment the knockback counter, disable movement, etc.
                             enemyHealth.IncrementKnockbackCounter();
-                            enemyMovement.DisableDetection(delay);
+                            enemyMovement.DisableDetection(attackCooldown);
                             enemyMovement.isKnockbackPaused = true;
                             Debug.Log(enemyMovement.isKnockbackPaused);
                             // Shake the camera
@@ -224,7 +223,7 @@ public class PlayerAttack : MonoBehaviour
             Vector2 direction = lockedEnemy.transform.position - transform.position;
             direction.Normalize();
 
-            playerMovement.PauseInputForDuration(delay);
+            playerMovement.PauseInputForDuration(attackCooldown);
             // Apply the jump force to the player's Rigidbody2D
 
             if (direction.y >= 0.80f)
@@ -293,7 +292,7 @@ public class PlayerAttack : MonoBehaviour
                         enemyRigidbody.AddForce(upwardForce, ForceMode2D.Impulse);
                         // Increment the knockback counter, disable movement, etc.
                         enemyHealth.IncrementKnockbackCounter();
-                        enemyMovement.DisableDetection(delay);
+                        enemyMovement.DisableDetection(attackCooldown);
                         enemyMovement.isKnockbackPaused = true;
                         Debug.Log(enemyMovement.isKnockbackPaused);
                         // Shake the camera
@@ -344,7 +343,7 @@ public class PlayerAttack : MonoBehaviour
 
     private IEnumerator ResetAttackAnimation()
     {
-        yield return new WaitForSeconds(delay); // Adjust the delay as needed
+        yield return new WaitForSeconds(attackCooldown); // Adjust the delay as needed
         animator.SetBool("Attacking", false);
         playerMovement.isDashing = false;
     }
