@@ -8,8 +8,10 @@
 </table>
 
 
-## *"15 Minutes From Jupiter"* (Prototype) {
-> :information_source: _A repository for the beginnings of a roguelike bullet hell developed in Summer 2023_<br>
+## $${\color{lightblue} \textbf{15 Minutes From Jupiter (Prototype)}}$$ 
+
+$${\color{lightblue} \textbf{A repository for the beginnings of a roguelike bullet hell developed in Summer 2023}}$$ 
+
 
 
 ### Folders: 
