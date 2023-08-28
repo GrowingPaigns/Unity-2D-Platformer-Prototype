@@ -897,6 +897,20 @@ MonoBehaviour:
   sprintSpeed: 10
   jumpForce: 10
   coyoteTime: 0.095
+  stamina: 3
+  maxStamina: 3
+  wallJumpingTime: 0.2
+  wallJumpDuration: 0.28
+  wallSlidingSpeed: 1
+  wallClimbingSpeed: 4
+  wallJumpPower: {x: 8, y: 12}
+  horizDashPower: 25
+  vertDashPower: 10
+  dashTime: 0.11
+  canMove: 1
+  isHurt: 0
+  isDashing: 0
+  facingRight: 1
   groundCheck: {fileID: 1536006156}
   groundLayer:
     serializedVersion: 2
@@ -905,21 +919,8 @@ MonoBehaviour:
   wallLayer:
     serializedVersion: 2
     m_Bits: 128
-  wallJumpingTime: 0.2
-  wallJumpDuration: 0.28
-  wallSlidingSpeed: 1
-  wallClimbingSpeed: 4
-  wallJumpPower: {x: 8, y: 12}
-  slowMotionTimeScale: 0.73
   trail: {fileID: 489081716}
-  horizDashPower: 25
-  vertDashPower: 10
-  dashTime: 0.11
   attackTranform: {fileID: 2112714966}
-  canMove: 1
-  isHurt: 0
-  facingRight: 1
-  isDashing: 0
 --- !u!212 &489081709
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1029,15 +1030,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab1ad9f9f6ab89c43bfb5dbd83f379ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 489081715}
   horizJumpForce: 6
   vertJumpForce: 7
   maxDistance: 3.2
   attackCooldown: 0.34
-  animator: {fileID: 489081715}
-  knockbackSpeed: 18
   isRaycastLocked: 0
   lockedEnemy: {fileID: 0}
   hitObject: {fileID: 0}
+  knockbackSpeed: 20.6
   cameraShakeDuration: 0.15
   cameraShakeMagnitude: 0.08
 --- !u!95 &489081715
@@ -1335,8 +1336,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3623c4d0b0ba22949b9a82ef26220812, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputDelay: 0.31
-  damageDelay: 5
+  playerMovementDelay: 0.31
+  invincibilityTime: 2
   playerCollider: {fileID: 489081718}
   player: {fileID: 489081707}
   health: 9
@@ -142346,7 +142347,6 @@ GameObject:
   m_Component:
   - component: {fileID: 987515897}
   - component: {fileID: 987515901}
-  - component: {fileID: 987515900}
   - component: {fileID: 987515898}
   m_Layer: 5
   m_Name: HeartHolder
@@ -142372,7 +142372,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -915.1, y: 498.3}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 24.04, y: 21.07}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &987515898
 MonoBehaviour:
@@ -142390,36 +142390,6 @@ MonoBehaviour:
   playerHealth: {fileID: 489081721}
   xSpacing: 34
   ySpacing: -36
---- !u!114 &987515900
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 987515896}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!222 &987515901
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -143001,8 +142971,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1283422869}
+  - component: {fileID: 1283422871}
+  - component: {fileID: 1283422870}
   m_Layer: 5
-  m_Name: StaminaBar
+  m_Name: StaminaHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -143024,9 +142996,33 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -915.1, y: 422}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1283422870
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1283422868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b63cc119cd43af46aa58a0feb5fd7ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  staminaPrefab: {fileID: 2578428456925729741, guid: acfccd56c9c3c3b4e83752285d80044d, type: 3}
+  playerStamina: {fileID: 489081708}
+  xSpacing: 68
+  ySpacing: 0
+--- !u!222 &1283422871
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1283422868}
+  m_CullTransparentMesh: 1
 --- !u!1 &1334879998
 GameObject:
   m_ObjectHideFlags: 0

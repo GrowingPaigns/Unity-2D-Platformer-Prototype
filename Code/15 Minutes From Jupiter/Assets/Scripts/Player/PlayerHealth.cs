@@ -7,17 +7,16 @@ public class PlayerHealth : MonoBehaviour
 {
     public static event Action OnPlayerDamage;
 
-    [SerializeField] private float inputDelay;
-    [SerializeField] private float damageDelay;
-
+    [SerializeField] private float playerMovementDelay;
+    [SerializeField] private float invincibilityTime;
     [SerializeField] private BoxCollider2D playerCollider;
     [SerializeField] private GameObject player;
+    public float health, maxHealth;
 
     private PlayerMovement playerMovement;
     private Rigidbody2D playerRigidbody;
     private Vector2 collisionDirection = new Vector2();
 
-    public float health, maxHealth;
 
     private void Start()
     {
@@ -86,9 +85,9 @@ public class PlayerHealth : MonoBehaviour
         Debug.Log(playerRigidbody.velocity);
 
         // Prevent collisions with enemy GameObjects for a specific duration
-        StartCoroutine(PauseInput(inputDelay));
+        StartCoroutine(PauseInput(playerMovementDelay));
         // Start flickering the sprite
-        StartCoroutine(FlickerSprite(damageDelay));
+        StartCoroutine(FlickerSprite(invincibilityTime));
     }
 
     private IEnumerator PauseInput(float duration) // pause input for wall jump

@@ -5,29 +5,41 @@ using UnityEngine.Tilemaps;
 
 public class PlayerAttack : MonoBehaviour
 {
-    private PlayerMovement playerMovement;
+    [Header("Attack/Attack Movement Variables")]
+    [Space]
+
+    [SerializeField] private Animator animator;         // Used to play different animations based on movement
+
     [SerializeField] private float horizJumpForce;
     [SerializeField] private float vertJumpForce;
-    private Rigidbody2D playerRigidbody;
+    
     [SerializeField] private float maxDistance;
     [SerializeField] private float attackCooldown;
-    [SerializeField] private Animator animator;         // Used to play different animations based on movement
-    [SerializeField] private float knockbackSpeed;
+    
+
+    [Space]
+    [Header("Enemy/Camera Affecting Variables")]
+    [Space]
+
     public bool isRaycastLocked = false;
     public GameObject lockedEnemy;
     public GameObject hitObject;
-    private float attackCooldownTimer = 0f;
+    [SerializeField] private float knockbackSpeed;
 
     public float cameraShakeDuration = 0.1f;
     public float cameraShakeMagnitude = 0.08f;
 
+
     private Camera mainCamera;
     private Vector3 originalCameraPosition;
+    
+    private PlayerMovement playerMovement;
+    private Rigidbody2D playerRigidbody;
+    private float attackCooldownTimer = 0f;
 
     private Plane cursorPlane; // The plane on which the cursor will be positioned
-
-
-
+    
+    
     void Start()
     {
         // Initialize playerMovement reference if needed

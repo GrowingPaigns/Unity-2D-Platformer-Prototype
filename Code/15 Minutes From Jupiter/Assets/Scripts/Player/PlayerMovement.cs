@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,6 +25,8 @@ public class PlayerMovement : MonoBehaviour
      * After we finalize these mechanics, all the serialized field specifiers can be removed. They are 
      * simply used to make testing easier at the moment.
      */
+    [Header("Movement Settings:")]
+    [Space]
     [SerializeField] private Animator animator;         // Used to play different animations based on movement
 
     [SerializeField] private int walkSpeed;             // Regular movement speed
@@ -31,11 +34,11 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private int jumpForce;             // Regular jump speed
     [SerializeField] private float coyoteTime;          // Time after walking off a ledge which a user can still jump during
+    public float stamina, maxStamina;
 
-    [SerializeField] private BoxCollider2D groundCheck; // Used to check if we are on the ground
-    [SerializeField] private LayerMask groundLayer;     // Objects with the 'ground' layer we want to check for
-    [SerializeField] private BoxCollider2D wallCheck;   // Used to check if we are next to a wall
-    [SerializeField] private LayerMask wallLayer;       // Objects with the 'wall' layer we want to check for
+    [Space]
+    [Header("Adv. Movement Settings:")]
+    [Space]
     
     [SerializeField] private float wallJumpingTime;     // Time after exiting the wall that the player can still wall jump
     [SerializeField] private float wallJumpDuration;    // How long it will take before L/R input is received again after a wall jump
@@ -44,29 +47,41 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float wallClimbingSpeed;   // Speed for climbing
     [SerializeField] private Vector2 wallJumpPower;     // The strength of the wall jump in x and y directions
 
-    [SerializeField] private float slowMotionTimeScale; // How much we want to slow down time by when dashing
-
-    [SerializeField] TrailRenderer trail;               // Trail rendered during sprinting and dashing
-    /* --------------------------------- */
-
-
     [SerializeField] private float horizDashPower;
     [SerializeField] private float vertDashPower;
     [SerializeField] private float dashTime;
+
+    [Space]
+    [Header("Bool Checks for Adv. Movement and Sprite Flipping:")]
+    [Space]
+
+    public bool canMove = true;     // Used in wall jumping (necessary to make th player jump)
+    public bool isHurt = false;
+    public bool isDashing = false;  // Switches on and off the dash mechanic in combo with the dash cooldown 
+    public bool facingRight = true; // Used to flip the character model
+
+    [Space]
+    [Header("Movement Collision Checks:")]
+    [Space]
+    
+    [SerializeField] private BoxCollider2D groundCheck; // Used to check if we are on the ground
+    [SerializeField] private LayerMask groundLayer;     // Objects with the 'ground' layer we want to check for
+    [SerializeField] private BoxCollider2D wallCheck;   // Used to check if we are next to a wall
+    [SerializeField] private LayerMask wallLayer;       // Objects with the 'wall' layer we want to check for
+
+    [Space]
+    [Header("Other:")]
+    [Space]
+
+    [SerializeField] TrailRenderer trail;               // Trail rendered during sprinting and dashing
     [SerializeField] private Transform attackTranform;
-
-
-
+    public static event Action OnPlayerDash;
+    
     /* -- Private Fields -- 
      * Used only within this class
      */
     private Rigidbody2D rb;          // determines the physics of the player
-
     private bool isSprinting;        // Used to change between 
-    public bool canMove = true;     // Used in wall jumping (necessary to make th player jump)
-    public bool isHurt = false;
-
-    public bool facingRight = true; // Used to flip the character model
     private float horizontalInput;   // carries the values to determine L/R movement
     private float verticalInput;     // carries the values to determine U/D movement
 
@@ -76,19 +91,37 @@ public class PlayerMovement : MonoBehaviour
     private float wallJumpingDirection; // redirects the player away from the wall
 
     private float coyoteTimeCounter; // Counts down the coyote time jump
-
     private bool canDash = true;     // Determines if a player can dash
-    public bool isDashing = false;  // Switches on and off the dash mechanic in combo with the dash cooldown 
-   
     private int dashCount = 0;
 
     private GameObject[] enemies;
-
     /* --------------------------------- */
 
 
 
+    private void DrainStamina(float amount)
+    {
+        stamina -= amount;
+        OnPlayerDash?.Invoke();
 
+        if (stamina <= 0)
+        {
+            Debug.Log("Cant Dash");
+            return;
+        }
+    }
+
+    private void RegainStamina()
+    {
+        stamina = maxStamina;
+        OnPlayerDash?.Invoke();
+
+        if (stamina <= 0)
+        {
+            Debug.Log("Cant Dash");
+            return;
+        }
+    }
 
 
     // Start is called before the first frame update
@@ -164,6 +197,7 @@ public class PlayerMovement : MonoBehaviour
         if (GroundCollision()) // Check if the player is grounded
         {
             dashCount = 0;
+            RegainStamina();
             // Reset the isWallJumping flag(s) and the coyote time variable
             coyoteTimeCounter = coyoteTime;
             isWallJumping = false;
@@ -444,7 +478,11 @@ public class PlayerMovement : MonoBehaviour
         if (dashDirectionSet)
         {
             dashCount++; // Increment dashCount only once if a dash direction is set
-
+            if (stamina > 0)
+            {
+                DrainStamina(1);
+            }
+            
         }
         else
         {

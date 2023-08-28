@@ -6,7 +6,7 @@ public class HeartManager : MonoBehaviour
 {
     [SerializeField] private GameObject heartPrefab;
     [SerializeField] private PlayerHealth playerHealth;
-    private List<HeartState> hearts = new List<HeartState>();
+    private List<UIState> hearts = new List<UIState>();
     [SerializeField] private float xSpacing; // Adjust this value as needed for xSpacing between hearts
     [SerializeField] private float ySpacing; // Adjust this value as needed for spacing between hearts
 
@@ -42,7 +42,7 @@ public class HeartManager : MonoBehaviour
         {
             // determine heart status
             int heartStatusRemainder = (int)Mathf.Clamp(playerHealth.health - (i * 2), 0, 2);
-            hearts[i].SetHeartImage((HeartStatus)heartStatusRemainder);
+            hearts[i].SetHeartImage((UIHeartStatus)heartStatusRemainder);
         }
 
     }
@@ -52,9 +52,7 @@ public class HeartManager : MonoBehaviour
         GameObject newHeart = Instantiate(heartPrefab);
         newHeart.transform.SetParent(gameObject.transform);
         int heartIndex = hearts.Count;
-        float heartWidth = newHeart.GetComponent<RectTransform>().rect.width;
-        float heartHeight = newHeart.GetComponent<RectTransform>().rect.height;
-
+        
         if (heartIndex == 0)
         {
             newHeart.transform.localPosition = Vector3.zero;
@@ -79,8 +77,8 @@ public class HeartManager : MonoBehaviour
 
         newHeart.transform.localScale = new Vector3(62,62,0);
 
-        HeartState newHeartState = newHeart.GetComponent<HeartState>();
-        newHeartState.SetHeartImage(HeartStatus.Empty);
+        UIState newHeartState = newHeart.GetComponent<UIState>();
+        newHeartState.SetHeartImage(UIHeartStatus.Empty);
         hearts.Add(newHeartState);
     }
 
@@ -90,6 +88,6 @@ public class HeartManager : MonoBehaviour
         {
             Destroy(t.gameObject);
         }
-        hearts = new List<HeartState>();
+        hearts = new List<UIState>();
     }
 }
