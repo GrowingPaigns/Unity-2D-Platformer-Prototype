@@ -2,12 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/*
-
-
-The line Debug.Log("PlayerAttack is not null"); is not being reached at all
-
-*/
 
 public class SmallEnemyHealth : MonoBehaviour
 {
@@ -16,11 +10,9 @@ public class SmallEnemyHealth : MonoBehaviour
     private PlayerAttack playerAttack;
     private BoxCollider2D boxCollider;
 
-    private Plane cursorPlane; // The plane on which the cursor will be positioned
 
     private void Start()
     {
-        cursorPlane = new Plane(Vector3.forward, Vector3.zero); // Define the cursor plane (e.g., XY plane)
         playerAttack = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerAttack>();
         animator = GetComponent<Animator>();
         boxCollider = GetComponent<BoxCollider2D>();

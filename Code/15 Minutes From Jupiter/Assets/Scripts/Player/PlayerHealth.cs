@@ -1,21 +1,29 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PlayerHealth : MonoBehaviour
 {
-    [SerializeField] private float delay;
-    [SerializeField] private GameObject[] hearts;
+    public static event Action OnPlayerDamage;
+
+    [SerializeField] private float inputDelay;
+    [SerializeField] private float damageDelay;
+
+    [SerializeField] private BoxCollider2D playerCollider;
+    [SerializeField] private GameObject player;
+
     private PlayerMovement playerMovement;
     private Rigidbody2D playerRigidbody;
     private Vector2 collisionDirection = new Vector2();
 
+    public float health, maxHealth;
 
     private void Start()
     {
         playerMovement = GetComponent<PlayerMovement>();
         playerRigidbody = GetComponent<Rigidbody2D>();
+
     }
 
     private void Update()
@@ -30,38 +38,89 @@ public class PlayerHealth : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            if (hearts.Length > 0)
+            if (!playerMovement.isHurt)
             {
+                Debug.Log("NOT Ignoring Collision");
+                string enemyType = collision.gameObject.name;
+                float damageAmount = 0;
 
-                // Calculate the direction of the collision
-                collisionDirection = transform.position - collision.transform.position;
-                collisionDirection.Normalize();
+                switch (enemyType)
+                {
+                    case ("Hatch"):
+                        damageAmount = 1f;
+                        break;
+                }
 
-                // Apply velocity in the opposite direction of the collision
+                TakeDamage(collision, damageAmount);
+            }
+            else
+            {
+                Debug.Log("Ignoring Collision");
+                Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Enemy"), true);
 
-
-                playerMovement.canMove = false;
-                playerRigidbody.velocity = new Vector2(collisionDirection.x * 12f, 7f);
-                Debug.Log(playerRigidbody.velocity);
-                StartCoroutine(PauseInput(delay));
-                // Get the last heart and destroy it
-                GameObject lastHeart = hearts[hearts.Length - 1];
-                Destroy(lastHeart);
-
-                // Remove the last heart from the array
-                Array.Resize(ref hearts, hearts.Length - 1);
             }
         }
-
-
+        
     }
+
+    private void TakeDamage(Collision2D collision, float amount)
+    {
+        health -= amount;
+        OnPlayerDamage?.Invoke();
+
+        if (health <= 0)
+        {
+            health = 0;
+            Debug.Log("UR DED");
+            Destroy(gameObject);
+            return;
+        }
+
+        // Calculate the direction of the collision
+        collisionDirection = transform.position - collision.transform.position;
+        collisionDirection.Normalize();
+
+        // Apply velocity in the opposite direction of the collision
+        playerMovement.canMove = false;
+        playerRigidbody.velocity = new Vector2(collisionDirection.x * 12f, 7f);
+        Debug.Log(playerRigidbody.velocity);
+
+        // Prevent collisions with enemy GameObjects for a specific duration
+        StartCoroutine(PauseInput(inputDelay));
+        // Start flickering the sprite
+        StartCoroutine(FlickerSprite(damageDelay));
+    }
+
     private IEnumerator PauseInput(float duration) // pause input for wall jump
     {
-        
-        
+        // Wait for the specified duration
         yield return new WaitForSeconds(duration);
 
         playerMovement.canMove = true;
-
     }
+
+    private IEnumerator FlickerSprite(float duration)
+    {
+        // Number of times to flicker the sprite
+        int flickerCount = Mathf.FloorToInt(duration / 0.2f); // Flicker every 0.2 seconds
+
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        Color originalColor = spriteRenderer.color;
+
+        playerMovement.isHurt = true;
+
+        for (int i = 0; i < flickerCount; i++)
+        {
+            spriteRenderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0.5f);
+            yield return new WaitForSeconds(0.1f);
+
+            spriteRenderer.color = originalColor;
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        spriteRenderer.color = originalColor;
+        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Enemy"), false);
+        playerMovement.isHurt = false;
+    }
+
 }

@@ -37,8 +37,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private BoxCollider2D wallCheck;   // Used to check if we are next to a wall
     [SerializeField] private LayerMask wallLayer;       // Objects with the 'wall' layer we want to check for
     
-    [SerializeField] private BoxCollider2D dashCheck;   // 
-
     [SerializeField] private float wallJumpingTime;     // Time after exiting the wall that the player can still wall jump
     [SerializeField] private float wallJumpDuration;    // How long it will take before L/R input is received again after a wall jump
 
@@ -66,6 +64,7 @@ public class PlayerMovement : MonoBehaviour
 
     private bool isSprinting;        // Used to change between 
     public bool canMove = true;     // Used in wall jumping (necessary to make th player jump)
+    public bool isHurt = false;
 
     public bool facingRight = true; // Used to flip the character model
     private float horizontalInput;   // carries the values to determine L/R movement
@@ -126,6 +125,8 @@ public class PlayerMovement : MonoBehaviour
         {
             return;
         }
+
+        
 
         horizontalInput = Input.GetAxisRaw("Horizontal"); // checks for L/R input
         verticalInput = Input.GetAxisRaw("Vertical"); // checks for L/R input
