@@ -7,11 +7,20 @@ public class PlayerHealth : MonoBehaviour
 {
     public static event Action OnPlayerDamage;
 
+    [Header("Player Damage Settings:")]
+    [Space]
+
     [SerializeField] private float playerMovementDelay;
     [SerializeField] private float invincibilityTime;
-    [SerializeField] private BoxCollider2D playerCollider;
+    [SerializeField] private Collider2D playerCollider;
     [SerializeField] private GameObject player;
-    public float health, maxHealth;
+
+    [Space]
+    [Header("Player Health Settings:")]
+    [Space]
+
+    public float health;
+    public float maxHealth;
 
     private PlayerMovement playerMovement;
     private Rigidbody2D playerRigidbody;
@@ -31,6 +40,7 @@ public class PlayerHealth : MonoBehaviour
         {
             return;
         }
+
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -56,7 +66,7 @@ public class PlayerHealth : MonoBehaviour
             {
                 Debug.Log("Ignoring Collision");
                 Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Enemy"), true);
-
+                
             }
         }
         
@@ -64,6 +74,7 @@ public class PlayerHealth : MonoBehaviour
 
     private void TakeDamage(Collision2D collision, float amount)
     {
+        playerRigidbody.isKinematic = false;
         health -= amount;
         OnPlayerDamage?.Invoke();
 
@@ -83,7 +94,7 @@ public class PlayerHealth : MonoBehaviour
         playerMovement.canMove = false;
         playerRigidbody.velocity = new Vector2(collisionDirection.x * 12f, 7f);
         Debug.Log(playerRigidbody.velocity);
-
+        
         // Prevent collisions with enemy GameObjects for a specific duration
         StartCoroutine(PauseInput(playerMovementDelay));
         // Start flickering the sprite

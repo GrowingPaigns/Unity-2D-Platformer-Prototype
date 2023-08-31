@@ -2,13 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AimAttack : MonoBehaviour
+public class AttackAnimationManager : MonoBehaviour
 {
-    private PlayerMovement playerMovement;
-    private PlayerAttack playerAttack;
-    private Transform aimTransform;
+    
     [SerializeField] private GameObject weaponParent;
     [SerializeField] private Animator animator;
+    
     private float rotationSpeed = 100000f; // Adjust this value to control the rotation speed
     private float radius = 2f; // Adjust this value to set the desired radius
     private Ray mousePosition;
@@ -20,6 +19,9 @@ public class AimAttack : MonoBehaviour
     private bool isInputPaused = false; // Flag to track input pause state
     private float inputPauseDuration = 0.34f; // Duration to pause input
 
+    private PlayerMovement playerMovement;
+    private PlayerAttack playerAttack;
+    private Transform aimTransform;
     private bool shouldFlip = false;
 
     private void Start()
@@ -39,7 +41,7 @@ public class AimAttack : MonoBehaviour
             return; // Skip input processing when input is paused
         }
 
-        if (Input.GetMouseButtonDown(0) && !isAnimationPlaying)
+        if (Input.GetMouseButtonDown(0) && !isAnimationPlaying && !Input.GetKey(KeyCode.S))
         {
             
             

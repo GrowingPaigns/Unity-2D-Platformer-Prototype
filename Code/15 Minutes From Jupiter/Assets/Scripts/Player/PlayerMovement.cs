@@ -64,10 +64,11 @@ public class PlayerMovement : MonoBehaviour
     [Header("Movement Collision Checks:")]
     [Space]
     
-    [SerializeField] private BoxCollider2D groundCheck; // Used to check if we are on the ground
+    [SerializeField] private Collider2D groundCheck; // Used to check if we are on the ground
     [SerializeField] private LayerMask groundLayer;     // Objects with the 'ground' layer we want to check for
     [SerializeField] private BoxCollider2D wallCheck;   // Used to check if we are next to a wall
     [SerializeField] private LayerMask wallLayer;       // Objects with the 'wall' layer we want to check for
+    [SerializeField] private LayerMask rampLayer;
 
     [Space]
     [Header("Other:")]
@@ -80,7 +81,7 @@ public class PlayerMovement : MonoBehaviour
     /* -- Private Fields -- 
      * Used only within this class
      */
-    private Rigidbody2D rb;          // determines the physics of the player
+    private Rigidbody2D playerRigidbody;          // determines the physics of the player
     private bool isSprinting;        // Used to change between 
     private float horizontalInput;   // carries the values to determine L/R movement
     private float verticalInput;     // carries the values to determine U/D movement
@@ -129,7 +130,7 @@ public class PlayerMovement : MonoBehaviour
     {
 
         // initialize the physics for our player
-        rb = GetComponent<Rigidbody2D>();
+        playerRigidbody = GetComponent<Rigidbody2D>();
     }
 
 
@@ -145,8 +146,6 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
        
-
-
         enemies = GameObject.FindGameObjectsWithTag("Enemy");
 
         if (isDashing) // if the player is dashing dont listen for any input
@@ -169,12 +168,12 @@ public class PlayerMovement : MonoBehaviour
 
             if (isSprinting) // ... do this for sprinting
             {
-                rb.velocity = new Vector2(horizontalInput * sprintSpeed, rb.velocity.y);
+                playerRigidbody.velocity = new Vector2(horizontalInput * sprintSpeed, playerRigidbody.velocity.y);
                 trail.emitting = true;
             }
             else // ... do this for regular movement
             {
-                rb.velocity = new Vector2(horizontalInput * walkSpeed, rb.velocity.y);
+                playerRigidbody.velocity = new Vector2(horizontalInput * walkSpeed, playerRigidbody.velocity.y);
                 trail.emitting = false;
             }
 
@@ -224,10 +223,19 @@ public class PlayerMovement : MonoBehaviour
             canMove = true;
         }
 
+        if (RampCollision() && horizontalInput == 0)
+        {
+            playerRigidbody.velocity = new Vector2(0, 0);
+            playerRigidbody.isKinematic = true;
+        } 
+        else
+        {
+            playerRigidbody.isKinematic = false;
+        }
 
 
         animator.SetBool("Grounded", GroundCollision()); // used in combo with vert speed to switch between falling
-        animator.SetFloat("VertSpeed", rb.velocity.y);   // and other states (idle, running)
+        animator.SetFloat("VertSpeed", playerRigidbody.velocity.y);   // and other states (idle, running)
     }
 
     /* called once per frame during runtime. used to handle things like user input, animations,
@@ -238,11 +246,11 @@ public class PlayerMovement : MonoBehaviour
         // Calculates jump (tapping space)
         if (GroundCollision() && coyoteTimeCounter > 0f && Input.GetKeyDown(KeyCode.Space))
         {
-            rb.velocity = Vector2.up * jumpForce;
+            playerRigidbody.velocity = Vector2.up * jumpForce;
         }
         else if (!GroundCollision() && coyoteTimeCounter > 0f && Input.GetKeyDown(KeyCode.Space))
         {
-            rb.velocity = Vector2.up * jumpForce;
+            playerRigidbody.velocity = Vector2.up * jumpForce;
             coyoteTimeCounter = 0f;
 
         }
@@ -275,6 +283,14 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
+    public bool RampCollision()
+    {
+        // Check if the player is touching the ramp layer
+        bool onRamp = groundCheck.IsTouchingLayers(rampLayer);
+
+        return onRamp;
+    }
+
     /* Checks if the Player is standing on a surface */
     public bool GroundCollision()
     {
@@ -284,8 +300,11 @@ public class PlayerMovement : MonoBehaviour
         // Check if the player is not touching the wall layer
         bool onWall = groundCheck.IsTouchingLayers(wallLayer);
 
-        // Return true if the player is grounded and not on the wall
-        return grounded || onWall;
+        // Check if the player is touching the ramp layer
+        bool onRamp = groundCheck.IsTouchingLayers(rampLayer);
+
+        // Return true if the player's feet are grounded on a surface
+        return grounded || onWall || onRamp;
     }
 
     /* Checks if the hitbox has collided with a wall */
@@ -323,36 +342,36 @@ public class PlayerMovement : MonoBehaviour
                 if (Input.GetKey(KeyCode.W)) // wall climbing with horizontal input
                 {
                     isWallSliding = true;
-                    rb.velocity = new Vector2(rb.velocity.x, wallClimbingSpeed);
+                    playerRigidbody.velocity = new Vector2(playerRigidbody.velocity.x, wallClimbingSpeed);
 
                     if (horizontalInput != 0)
                     {
-                        rb.velocity = new Vector2(horizontalInput * walkSpeed, rb.velocity.y);
+                        playerRigidbody.velocity = new Vector2(horizontalInput * walkSpeed, playerRigidbody.velocity.y);
                     }
 
                 } 
                 else
                 {
                     isWallSliding = true;
-                    rb.velocity = new Vector2(rb.velocity.x, Mathf.Clamp(rb.velocity.y, -wallSlidingSpeed, float.MaxValue));
+                    playerRigidbody.velocity = new Vector2(playerRigidbody.velocity.x, Mathf.Clamp(playerRigidbody.velocity.y, -wallSlidingSpeed, float.MaxValue));
                 }
 
             }
             else if (Input.GetKey(KeyCode.W)) // wall climbing with horizontal input
             {
                 isWallSliding = true;
-                rb.velocity = new Vector2(rb.velocity.x, wallClimbingSpeed);
+                playerRigidbody.velocity = new Vector2(playerRigidbody.velocity.x, wallClimbingSpeed);
 
                 if (horizontalInput != 0)
                 {
-                    rb.velocity = new Vector2(horizontalInput * walkSpeed, rb.velocity.y);
+                    playerRigidbody.velocity = new Vector2(horizontalInput * walkSpeed, playerRigidbody.velocity.y);
                 }
 
             }
             else if (Input.GetKey(KeyCode.S)) // ... drops the player at normal speed instead of sliding
             {
 
-                rb.velocity = new Vector2(horizontalInput * walkSpeed, rb.velocity.y);
+                playerRigidbody.velocity = new Vector2(horizontalInput * walkSpeed, playerRigidbody.velocity.y);
                 isWallSliding = false;
             }
             else // Wall slide behavior
@@ -407,7 +426,7 @@ public class PlayerMovement : MonoBehaviour
 
             
             canMove = false; // Enable player movement again
-            rb.velocity = new Vector2(wallJumpingDirection * wallJumpPower.x, wallJumpPower.y);
+            playerRigidbody.velocity = new Vector2(wallJumpingDirection * wallJumpPower.x, wallJumpPower.y);
             StartCoroutine(PauseInputForDuration(wallJumpDuration));
             
 
@@ -446,7 +465,7 @@ public class PlayerMovement : MonoBehaviour
             Physics2D.IgnoreCollision(enemy.GetComponent<Collider2D>(), GetComponent<Collider2D>(), true);
         }
 
-        float originalGravity = rb.gravityScale;
+        float originalGravity = playerRigidbody.gravityScale;
 
         Vector2 dashDirection = Vector2.zero;
 
@@ -504,8 +523,8 @@ public class PlayerMovement : MonoBehaviour
 
 
 
-        rb.gravityScale = 0f;
-        rb.velocity = new Vector2(dashDirection.x, dashDirection.y);
+        playerRigidbody.gravityScale = 0f;
+        playerRigidbody.velocity = new Vector2(dashDirection.x, dashDirection.y);
         trail.emitting = true;
 
         float startTime = Time.time;
@@ -527,7 +546,7 @@ public class PlayerMovement : MonoBehaviour
         
 
         trail.emitting = false;
-        rb.gravityScale = originalGravity;
+        playerRigidbody.gravityScale = originalGravity;
 
         isDashing = false;
         canDash = true;

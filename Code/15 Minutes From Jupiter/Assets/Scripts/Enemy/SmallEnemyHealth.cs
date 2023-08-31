@@ -8,14 +8,14 @@ public class SmallEnemyHealth : MonoBehaviour
     public int knockbackCounter = 0;
     private Animator animator;
     private PlayerAttack playerAttack;
-    private BoxCollider2D boxCollider;
+    private Collider2D boxCollider;
 
 
     private void Start()
     {
         playerAttack = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerAttack>();
         animator = GetComponent<Animator>();
-        boxCollider = GetComponent<BoxCollider2D>();
+        boxCollider = GetComponent<Collider2D>();
 
         if (playerAttack == null)
         {

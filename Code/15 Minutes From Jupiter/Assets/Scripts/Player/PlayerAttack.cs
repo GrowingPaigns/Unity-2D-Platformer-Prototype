@@ -24,10 +24,11 @@ public class PlayerAttack : MonoBehaviour
     public bool isRaycastLocked = false;
     public GameObject lockedEnemy;
     public GameObject hitObject;
-    [SerializeField] private float knockbackSpeed;
-
     public float cameraShakeDuration = 0.1f;
     public float cameraShakeMagnitude = 0.08f;
+
+    [SerializeField] private float knockbackSpeed;
+    [SerializeField] private float smashForceMultiplier;
 
 
     private Camera mainCamera;
@@ -52,6 +53,11 @@ public class PlayerAttack : MonoBehaviour
         animator.SetBool("Attacking", false);
     }
 
+    private void FixedUpdate()
+    {
+        animator.SetFloat("VertSpeed", Input.GetAxisRaw("Vertical"));
+        animator.SetBool("Grounded", playerMovement.GroundCollision());
+    }
 
     void Update()
     {
@@ -64,28 +70,46 @@ public class PlayerAttack : MonoBehaviour
             return;
         }
 
+        
+
         if (Input.GetMouseButtonDown(0) && !isRaycastLocked && attackCooldownTimer <= 0f)
         {
+
+
             animator.SetBool("Attacking", true);
             playerMovement.isDashing = true;
             Vector3 hitPoint = new Vector3(0, 0, 0);
             Vector2 direction = new Vector2(0, 0);
 
-            // Get the mouse position in the world
-            Ray mousePosition = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            if (cursorPlane.Raycast(mousePosition, out float dist))
+            if (Input.GetKey(KeyCode.S))
             {
-                hitPoint = mousePosition.GetPoint(dist);
+                animator.SetBool("Attacking", false);
+                
+                direction = Vector2.down; // Set the direction to straight up
+                float forceHolder = vertJumpForce;
+                vertJumpForce *= smashForceMultiplier;
+                playerRigidbody.AddForce(new Vector2(direction.x * horizJumpForce, direction.y * vertJumpForce * 2), ForceMode2D.Impulse);
+                vertJumpForce = forceHolder;
+
+            }
+            else
+            {
+                // Get the mouse position in the world
+                Ray mousePosition = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+                if (cursorPlane.Raycast(mousePosition, out float dist))
+                {
+                    hitPoint = mousePosition.GetPoint(dist);
+                }
+
+                // Calculate the direction from the player to the mouse
+                direction = hitPoint - transform.position;
+
+                // Normalize the direction to get a unit vector
+                direction.Normalize();
             }
 
-            // Calculate the direction from the player to the mouse
-            direction = hitPoint - transform.position;
 
-            // Normalize the direction to get a unit vector
-            direction.Normalize();
-
-            
 
             playerMovement.PauseInputForDuration(attackCooldown);
             // Apply the jump force to the player's Rigidbody2D

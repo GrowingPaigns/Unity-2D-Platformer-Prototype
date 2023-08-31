@@ -20,7 +20,7 @@ TagManager:
   - UI
   - Ground
   - Wall
-  - 
+  - Ramp
   - Player
   - Enemy
   - 
@@ -59,6 +59,9 @@ TagManager:
     locked: 0
   - name: Walls
     uniqueID: 2740113069
+    locked: 0
+  - name: Ramps
+    uniqueID: 493769251
     locked: 0
   - name: UI
     uniqueID: 3883646469
