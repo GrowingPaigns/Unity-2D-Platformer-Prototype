@@ -8,9 +8,9 @@
 </table>
 
 
-## $${\color{lightblue} \textbf{15 Minutes From Jupiter (Prototype)}}$$ 
+# 15 Minutes From Jupiter (Prototype)
 
-$${\color{lightblue} \textbf{A repository for the beginnings of a roguelike bullet hell developed in Summer 2023}}$$ 
+#### *A repository for the beginnings of a roguelike bullet hell developed in Summer 2023*
 
 
 
