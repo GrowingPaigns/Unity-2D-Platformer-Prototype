@@ -169,15 +169,22 @@ public class PlayerMovement : MonoBehaviour
             if (isSprinting) // ... do this for sprinting
             {
                 playerRigidbody.velocity = new Vector2(horizontalInput * sprintSpeed, playerRigidbody.velocity.y);
-                trail.emitting = true;
+                if (trail != null)
+                {
+                    trail.emitting = true;
+                }
             }
             else // ... do this for regular movement
             {
                 playerRigidbody.velocity = new Vector2(horizontalInput * walkSpeed, playerRigidbody.velocity.y);
-                trail.emitting = false;
+                if (trail != null)
+                {
+                    trail.emitting = false;
+                }
+                
             }
 
-            // used in animator to switch between idle/moving animations
+            // used in attackAnimator to switch between idle/moving animations
             animator.SetFloat("HorizSpeed", Mathf.Abs(horizontalInput));
         }
 
@@ -525,8 +532,10 @@ public class PlayerMovement : MonoBehaviour
 
         playerRigidbody.gravityScale = 0f;
         playerRigidbody.velocity = new Vector2(dashDirection.x, dashDirection.y);
-        trail.emitting = true;
-
+        if (trail != null)
+        {
+            trail.emitting = true;
+        }
         float startTime = Time.time;
         float elapsedTime = 0f;
 
@@ -543,9 +552,12 @@ public class PlayerMovement : MonoBehaviour
 
 
 
-        
 
-        trail.emitting = false;
+
+        if (trail != null)
+        {
+            trail.emitting = false;
+        }
         playerRigidbody.gravityScale = originalGravity;
 
         isDashing = false;

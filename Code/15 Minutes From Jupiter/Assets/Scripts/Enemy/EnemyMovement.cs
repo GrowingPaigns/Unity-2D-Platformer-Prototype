@@ -27,7 +27,8 @@ public class EnemyMovement : MonoBehaviour
     [Header("Player Interaction Settings:")]
     [Space]
 
-    [SerializeField] private float raycastDistance;     // Used to detect the player gameobject
+    [SerializeField] private float chasingRaycastDist;  // Used to detect the player gameobject when we want the enemy to chase them
+    [SerializeField] private float attackingRaycastDist;// Used to detect the player gameobject when we want the enemy to perform an attack
     public bool isKnockbackPaused = false;              // Knockback interaction from being attacked
     
     private float knockbackPauseTimer = 0f;             // Set by methods in the PlayerAttack class
@@ -42,10 +43,19 @@ public class EnemyMovement : MonoBehaviour
     private float moveTime = 0f;
 
     private bool isDetectionEnabled = true;
-    
+
+    private bool isAttacking = false; // Add this variable to track the attack state.
+    private float attackDuration = 1f; // The duration of the attack animation.
+    private float attackCooldownTimer = 0f; // Timer to track the cooldown
+    private bool isAttackCooldown = false; // Indicates whether the attack is on cooldown
+
+
+    private GameObject player;
+
 
     private void Start()
     {
+        player = GameObject.FindGameObjectWithTag("Player");
         enemyRigidbody = GetComponent<Rigidbody2D>();
         SetRandomMovementTime();
 
@@ -54,6 +64,11 @@ public class EnemyMovement : MonoBehaviour
 
     private void Update()
     {
+        if (isAttacking)
+        {
+            return;
+        }
+
         if (isKnockbackPaused)
         {
             knockbackPauseTimer -= Time.deltaTime;
@@ -91,6 +106,7 @@ public class EnemyMovement : MonoBehaviour
             }
         }
 
+
         if (!isWaiting && !isKnockbackPaused)
         {
             EnableMovement();
@@ -106,19 +122,19 @@ public class EnemyMovement : MonoBehaviour
 
             
 
-            if (isDetectionEnabled && PlayerInRange())
+            if (isDetectionEnabled && PlayerInRange(chasingRaycastDist))
             {
-                GameObject player = GameObject.FindGameObjectWithTag("Player");
-                Vector3 direction = player.transform.position - transform.position;
+
+                Vector3 runDirection = player.transform.position - transform.position;
 
                 if (health.knockbackCounter < 1)
                 {
-                    enemyRigidbody.velocity = new Vector2(direction.normalized.x * chaseSpeed, enemyRigidbody.velocity.y);
+                    enemyRigidbody.velocity = new Vector2(runDirection.normalized.x * chaseSpeed, enemyRigidbody.velocity.y);
                     animator.SetFloat("HorizSpeed", Mathf.Abs(enemyRigidbody.velocity.x));
                     FlipTowardsMovement();
                 } else
                 {
-                    enemyRigidbody.velocity = new Vector2(direction.normalized.x * chaseSpeed/2, enemyRigidbody.velocity.y);
+                    enemyRigidbody.velocity = new Vector2(runDirection.normalized.x * chaseSpeed/2, enemyRigidbody.velocity.y);
                     animator.SetFloat("HorizSpeed", Mathf.Abs(enemyRigidbody.velocity.x));
                     FlipTowardsMovement();
                 }
@@ -156,12 +172,54 @@ public class EnemyMovement : MonoBehaviour
             }
         }
 
-        
+
+        if (isAttackCooldown)
+        {
+            // Decrement the attackCooldownTimer.
+            attackCooldownTimer -= Time.deltaTime;
+
+            // Check if the cooldown has ended.
+            if (attackCooldownTimer <= 0f)
+            {
+                isAttackCooldown = false;
+            }
+        }
+        else
+        {
+            if (!isAttacking && PlayerInRange(attackingRaycastDist) && !isKnockbackPaused)
+            {
+                // Start attacking when the player is in range and not currently attacking or being knocked back.
+                StartCoroutine(AttackCoroutine());
+
+                // Set the attack cooldown timer to your desired delay (e.g., 1 second).
+                float cooldownDelay = 1f; // Adjust as needed
+                attackCooldownTimer = cooldownDelay;
+
+                // Set isAttackCooldown to true to prevent re-entering the if statement.
+                isAttackCooldown = true;
+            }
+        }
+
     }
 
-    private bool PlayerInRange()
+
+    private IEnumerator AttackCoroutine()
     {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        enemyRigidbody.velocity = Vector2.zero;
+        isAttacking = true;
+        animator.SetBool("Attacking", true);
+
+        // Wait for the attackDuration.
+        yield return new WaitForSeconds(attackDuration);
+
+        // End the attack animation.
+        animator.SetBool("Attacking", false);
+        isAttacking = false;
+    }
+
+    private bool PlayerInRange(float raycastDist)
+    {
+        
         if (player != null)
         {
             Vector3 direction = player.transform.position - transform.position;
@@ -187,7 +245,7 @@ public class EnemyMovement : MonoBehaviour
                 // Apply a vertical offset to the rotatedDirection
                 rotatedDirection += Vector3.up * 0.1f; // Adjust the vertical offset as desired
 
-                RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, rotatedDirection.normalized, raycastDistance);
+                RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, rotatedDirection.normalized, raycastDist);
 
                 bool playerDetected = false;
 

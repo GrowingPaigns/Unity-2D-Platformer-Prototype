@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using UnityEditorInternal.Profiling.Memory.Experimental.FileFormat;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -45,22 +46,30 @@ public class PlayerHealth : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        Debug.Log("TAG: " + collision.gameObject.tag);
+        Debug.Log("NAME: " + collision.gameObject.name);
+
+        // Check if the collider is a trigger
+        if (collision.collider.isTrigger)
+        {
+            Debug.Log("Collider is a trigger.");
+        }
+
         if (collision.gameObject.CompareTag("Enemy"))
         {
             if (!playerMovement.isHurt)
             {
                 Debug.Log("NOT Ignoring Collision");
-                string enemyType = collision.gameObject.name;
+                string enemyType = collision.transform.gameObject.name;
+                Debug.Log("ENEMYTYPE: " + enemyType);
                 float damageAmount = 0;
 
-                switch (enemyType)
+                if (enemyType.Contains("Hatch"))
                 {
-                    case ("Hatch"):
-                        damageAmount = 1f;
-                        break;
+                    damageAmount = 1f;
                 }
 
-                TakeDamage(collision, damageAmount);
+                TakeDamage(collision.collider, damageAmount);
             }
             else
             {
@@ -72,7 +81,36 @@ public class PlayerHealth : MonoBehaviour
         
     }
 
-    private void TakeDamage(Collision2D collision, float amount)
+    private void OnTriggerEnter2D(Collider2D collider)
+    {
+        Debug.Log("Trigger Entered: " + collider.gameObject.tag);
+
+        // Check if the collider is tagged as "EnemyAttack"
+        if (collider.CompareTag("EnemyAttack"))
+        {
+            if (!playerMovement.isHurt)
+            {
+                Debug.Log("NOT Ignoring Collision");
+                string enemyType = collider.transform.parent.gameObject.name;
+                Debug.Log(enemyType);
+                float damageAmount = 0;
+
+                if (enemyType.Contains("Hatch"))
+                {
+                    damageAmount = 1f;
+                }
+
+                TakeDamage(collider, damageAmount);
+            }
+            else
+            {
+                Debug.Log("Ignoring Collision");
+                Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Enemy"), true);
+            }
+        }
+    }
+
+    private void TakeDamage(Collider2D collision, float amount)
     {
         playerRigidbody.isKinematic = false;
         health -= amount;

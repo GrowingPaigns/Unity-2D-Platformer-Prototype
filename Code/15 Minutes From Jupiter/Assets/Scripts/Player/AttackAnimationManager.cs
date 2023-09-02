@@ -6,8 +6,10 @@ public class AttackAnimationManager : MonoBehaviour
 {
     
     [SerializeField] private GameObject weaponParent;
-    [SerializeField] private Animator animator;
-    
+    [SerializeField] private Animator attackAnimator;
+
+    [SerializeField] private float knockbackSpeed;
+
     private float rotationSpeed = 100000f; // Adjust this value to control the rotation speed
     private float radius = 2f; // Adjust this value to set the desired radius
     private Ray mousePosition;
@@ -95,7 +97,7 @@ public class AttackAnimationManager : MonoBehaviour
             
             StartCoroutine(ResumeInputAfterDelay(inputPauseDuration)); // Resume input after the specified duration
 
-            animator.SetBool("Attacking", true);
+            attackAnimator.SetBool("Attacking", true);
 
 
         }
@@ -117,7 +119,7 @@ public class AttackAnimationManager : MonoBehaviour
 
         if (isAttacking)
         {
-            animator.SetBool("Attacking", false);
+            attackAnimator.SetBool("Attacking", false);
             isAttacking = false; // Stop the attack
         }
 
@@ -128,5 +130,47 @@ public class AttackAnimationManager : MonoBehaviour
         }
         playerMovement.isDashing = false;
         isAnimationPlaying = false; // Reset the animation playing flag
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Enemy") && other.transform.parent == null)
+        {
+            // Perform actions based on the hit object
+            Debug.Log("Hit object: " + other.gameObject.name);
+
+            // Get references to the enemy components
+            Rigidbody2D enemyRigidbody = other.gameObject.GetComponent<Rigidbody2D>();
+            EnemyMovement enemyMovement = other.gameObject.GetComponent<EnemyMovement>();
+            SmallEnemyHealth enemyHealth = other.gameObject.GetComponent<SmallEnemyHealth>();
+
+            PlayerAttack playerAttack = GetComponentInParent<PlayerAttack>();
+
+            if (enemyRigidbody != null)
+            {
+
+                Debug.Log("Knockback is paused");
+                enemyMovement.DisableMovement();
+
+                // Apply knockback velocity to the enemy
+                Vector2 knockbackDirection = enemyRigidbody.transform.position - transform.position;
+                knockbackDirection.Normalize();
+                // Calculate the knockback force by multiplying the knockback direction with the knockback speed
+                Vector2 knockbackForce = knockbackDirection * knockbackSpeed;
+                // Apply the knockback force to the enemy's Rigidbody2D
+                enemyRigidbody.velocity = knockbackForce;
+                // Apply an upward force to the enemy
+                Vector2 upwardForce = Vector2.up * (knockbackSpeed / 2);
+                enemyRigidbody.AddForce(upwardForce, ForceMode2D.Impulse);
+                // Increment the knockback counter, disable movement, etc.
+                enemyHealth.IncrementKnockbackCounter();
+                enemyMovement.DisableDetection(playerAttack.attackCooldown);
+                enemyMovement.isKnockbackPaused = true;
+                Debug.Log(enemyMovement.isKnockbackPaused);
+
+                // Shake the camera 
+                playerAttack.StartCoroutine(playerAttack.ShakeCamera(playerAttack.cameraShakeDuration, playerAttack.cameraShakeMagnitude));
+            }
+        }
     }
 }
