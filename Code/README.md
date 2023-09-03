@@ -12,6 +12,7 @@
 
 > #### Assets: _(Contains Everything Related to the Development of the Game)_
 > - Animations - character/enemy/ui animations
+> - InputPromptsPack - contains some free art assets for Input Buttons created by [Julio Cackco](https://juliocacko.gumroad.com/l/free-input-pack)
 > - FirstLevelAssets - assets for the development of the intro level/demo
 > - MainMenuAssets - assets for the development of the main menu
 > - Materials - physics-based material mechanics
