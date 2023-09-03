@@ -12,13 +12,13 @@
 
 > #### Assets: _(Contains Everything Related to the Development of the Game)_
 > - Animations - character/enemy/ui animations
-> - InputPromptsPack - contains some free art assets for Input Buttons created by [Julio Cackco](https://juliocacko.gumroad.com/l/free-input-pack)
+> - InputPromptsPack - contains some free art assets for Input Buttons created by [Julio Cacko](https://juliocacko.gumroad.com/l/free-input-pack)
 > - FirstLevelAssets - assets for the development of the intro level/demo
 > - MainMenuAssets - assets for the development of the main menu
 > - Materials - physics-based material mechanics
-> - Prefabs (outdated, only there because that's how the main menu was set up in a previous project)
+> - Prefabs - contains multiple different prefab game objects such as enemies, interactable objects, etc.
 > - Scenes - levels/menus in development
-> - Scripts - coding logic which makes the game run
+> - Scripts - coding logic that makes the game run
 > - Other files - unity specific data
 > #### Other Files: _(Contain Specific Project Settings to Actually Make the Project Run in Unity)_
 
