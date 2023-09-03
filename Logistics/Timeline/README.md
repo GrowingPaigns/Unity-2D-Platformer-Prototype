@@ -1,5 +1,5 @@
 ## Project Timeline
-_Project timeline regarding the upcomming weeks_
+_Project timeline regarding the upcomming weeks - this is outdated now (09/02/2023), many of these tasks have been completed and taken even further, these documents have just not been updated_
 
 ### TO DO List:
 - [ ] Enemy Implementation (Pt. 1) - (Expected Deadline - 05/28/2023)
