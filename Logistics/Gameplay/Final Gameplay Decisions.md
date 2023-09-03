@@ -4,11 +4,11 @@ This section of the repository will hold all ideas related to potential gameplay
 
 ### Level Ideas:     
 - **Mix Of Both (i.e. Spelunky, Dead Cells, Binding of Isaac, Enter the Gungeon)** 
-    - Regular rooms get randomly generated, Boss rooms/Special/Other rooms are hand crafted 
+    - Regular rooms get randomly generated, Boss rooms/Special/Other rooms are hand-crafted 
         - Provides some consistency while leaving a bit up to random chance
 - Starting level 
   - Open chest
-  - Option for randomly generated weaopn (or choose the one you want)
+  - Option for randomly generated weapon (or choose the one you want)
     - First time playing, users have to use fists (perks included)
     - After beating a boss, they drop a specific weapon, and you can use that in the next run
       - Bosses powers are the powers of the weapon they hold   
@@ -16,8 +16,8 @@ This section of the repository will hold all ideas related to potential gameplay
 - Core Loop
   - Loop: Level, Boss, Level, Boss
     - Levels are side-scrollers and randomly generated 
-    - Boss rooms are hand crafted 
-      - Bosses range from having random attacks to hand crafted attacks 
+    - Boss rooms are hand-crafted 
+      - Bosses range from having random attacks to hand-crafted attacks 
   - Final Boss: Jupiter
     - Phase 1: Boss is in embryo resting
       - Fight tentacle appendages  
@@ -39,14 +39,14 @@ This section of the repository will hold all ideas related to potential gameplay
       
 -  [X] Implement Advanced Movements
    - [X] Wall Jumping
-     - Space, or A/D+Space to jump away from wall
+     - Space, or A/D+Space to jump away from the wall
    - [X] Wall Sliding 
-     - Slide slow when pressed against wall
+     - Slide slow when pressed against the wall
      - Press 'S' to slide fast
    - [X] Wall Climbing
      - Press 'W' to climb wall
       
-Want controls to be tight and responsive, not slipery 
+Want controls to be tight and responsive, not slippery 
   - End with any super movement
   - Gradually add changes to movement as the player upgrades themselves/their weapon
 
@@ -67,8 +67,8 @@ Want controls to be tight and responsive, not slipery
 - [ ] Melee + Projectile enemies
     - Heavies (Shoot lots of projectiles at once with a long cooldown)
         - Move slow, lots of health
-    - Normals (Shoot projectiles intermitently, short cooldown)
+    - Normals (Shoot projectiles intermittently, short cooldown)
         - Move normally, normal health
     - Swarms (Melee only)
-        - Extremely fast movement, minescule health 
+        - Extremely fast movement, minimal health 
  
