@@ -207,6 +207,7 @@ public class EnemyMovement : MonoBehaviour
     {
         enemyRigidbody.velocity = Vector2.zero;
         isAttacking = true;
+        animator.SetFloat("HorizSpeed", enemyRigidbody.velocity.x);
         animator.SetBool("Attacking", true);
 
         // Wait for the attackDuration.

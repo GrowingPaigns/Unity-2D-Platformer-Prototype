@@ -55,7 +55,6 @@ public class PlayerAttack : MonoBehaviour
 
     private void FixedUpdate()
     {
-        playerAnimator.SetFloat("VertSpeed", Input.GetAxisRaw("Vertical"));
         playerAnimator.SetBool("Grounded", playerMovement.GroundCollision());
     }
 
@@ -159,7 +158,7 @@ public class PlayerAttack : MonoBehaviour
                 {
                     GameObject hitObject = hitCollider.gameObject;
 
-                    if (hitObject.CompareTag("Enemy") && hitObject.transform.parent == null)
+                    if (hitObject.CompareTag("Enemy"))
                     {
                         // Perform actions based on the hit object (enemy)
                         Debug.Log("Hit object: " + hitObject.name);
