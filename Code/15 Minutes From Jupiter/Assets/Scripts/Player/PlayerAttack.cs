@@ -71,7 +71,6 @@ public class PlayerAttack : MonoBehaviour
 
 
             playerAnimator.SetBool("Attacking", true);
-            playerMovement.isDashing = true;
             Vector3 hitPoint = new Vector3(0, 0, 0);
             Vector2 direction = new Vector2(0, 0);
 
@@ -242,6 +241,5 @@ public class PlayerAttack : MonoBehaviour
     {
         yield return new WaitForSeconds(attackCooldown); // Adjust the delay as needed
         playerAnimator.SetBool("Attacking", false);
-        playerMovement.isDashing = false;
     }
 }

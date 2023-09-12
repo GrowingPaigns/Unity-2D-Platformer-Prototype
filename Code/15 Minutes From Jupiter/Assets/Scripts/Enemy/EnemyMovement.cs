@@ -86,6 +86,18 @@ public class EnemyMovement : MonoBehaviour
             }
         }
 
+        if (RampCollision() && enemyRigidbody.velocity.x == 0)
+        {
+            enemyRigidbody.isKinematic = true;
+            enemyRigidbody.velocity = new Vector2(0, 0);
+
+        }
+        else
+        {
+            enemyRigidbody.isKinematic = false;
+        }
+
+
         if (RampCollision())
         {
             enemyRigidbody.gravityScale = 0;
