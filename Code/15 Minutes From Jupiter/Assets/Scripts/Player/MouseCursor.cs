@@ -31,7 +31,6 @@ public class MouseCursor : MonoBehaviour
     {
         if (player.isRaycastLocked)
         {
-            // Debug.Log("Lock Detected in Cursor Script");
 
             if (player.lockedEnemy != null)
             {
@@ -42,8 +41,6 @@ public class MouseCursor : MonoBehaviour
         }
         else
         {
-            // Debug.Log("Lock Was Not Detected in Cursor Script");
-
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             if (cursorPlane.Raycast(ray, out float distance))
             {
@@ -53,12 +50,10 @@ public class MouseCursor : MonoBehaviour
 
             if (Input.GetMouseButton(0))
             {
-                // Debug.Log("Test 1");
                 animator.SetBool("Clicking", true);
             }
             else
             {
-                // Debug.Log("Test 2");
                 animator.SetBool("Clicking", false);
             }
 

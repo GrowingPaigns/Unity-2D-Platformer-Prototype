@@ -46,22 +46,12 @@ public class PlayerHealth : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("TAG: " + collision.gameObject.tag);
-        Debug.Log("NAME: " + collision.gameObject.name);
-
-        // Check if the collider is a trigger
-        if (collision.collider.isTrigger)
-        {
-            Debug.Log("Collider is a trigger.");
-        }
 
         if (collision.gameObject.CompareTag("Enemy"))
         {
             if (!playerMovement.isHurt)
             {
-                Debug.Log("NOT Ignoring Collision");
                 string enemyType = collision.transform.gameObject.name;
-                Debug.Log("ENEMYTYPE: " + enemyType);
                 float damageAmount = 0;
 
                 if (enemyType.Contains("Hatch"))
@@ -73,7 +63,6 @@ public class PlayerHealth : MonoBehaviour
             }
             else
             {
-                Debug.Log("Ignoring Collision");
                 Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Enemy"), true);
                 
             }
@@ -83,16 +72,12 @@ public class PlayerHealth : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        Debug.Log("Trigger Entered: " + collider.gameObject.tag);
-
         // Check if the collider is tagged as "EnemyAttack"
         if (collider.CompareTag("EnemyAttack"))
         {
             if (!playerMovement.isHurt)
             {
-                Debug.Log("NOT Ignoring Collision");
                 string enemyType = collider.transform.parent.gameObject.name;
-                Debug.Log(enemyType);
                 float damageAmount = 0;
 
                 if (enemyType.Contains("Hatch"))
@@ -104,7 +89,6 @@ public class PlayerHealth : MonoBehaviour
             }
             else
             {
-                Debug.Log("Ignoring Collision");
                 Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Enemy"), true);
             }
         }
@@ -119,7 +103,6 @@ public class PlayerHealth : MonoBehaviour
         if (health <= 0)
         {
             health = 0;
-            Debug.Log("UR DED");
             Destroy(gameObject);
             return;
         }
@@ -131,7 +114,6 @@ public class PlayerHealth : MonoBehaviour
         // Apply velocity in the opposite direction of the collision
         playerMovement.canMove = false;
         playerRigidbody.velocity = new Vector2(collisionDirection.x * 12f, 7f);
-        Debug.Log(playerRigidbody.velocity);
         
         // Prevent collisions with enemy GameObjects for a specific duration
         StartCoroutine(PauseInput(playerMovementDelay));

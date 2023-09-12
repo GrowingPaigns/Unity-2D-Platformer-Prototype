@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -39,8 +38,7 @@ public class PlayerMovement : MonoBehaviour
     [Space]
     [Header("Adv. Movement Settings:")]
     [Space]
-    
-    [SerializeField] private float wallJumpingTime;     // Time after exiting the wall that the player can still wall jump
+
     [SerializeField] private float wallJumpDuration;    // How long it will take before L/R input is received again after a wall jump
 
     [SerializeField] private float wallSlidingSpeed;    // Lowers the speed of the fall to make it look like sliding
@@ -50,6 +48,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float horizDashPower;
     [SerializeField] private float vertDashPower;
     [SerializeField] private float dashTime;
+
+    [SerializeField] private float slidingSpeed;
+    
 
     [Space]
     [Header("Bool Checks for Adv. Movement and Sprite Flipping:")]
@@ -63,7 +64,7 @@ public class PlayerMovement : MonoBehaviour
     [Space]
     [Header("Movement Collision Checks:")]
     [Space]
-    
+
     [SerializeField] private Collider2D groundCheck; // Used to check if we are on the ground
     [SerializeField] private LayerMask groundLayer;     // Objects with the 'ground' layer we want to check for
     [SerializeField] private BoxCollider2D wallCheck;   // Used to check if we are next to a wall
@@ -77,7 +78,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] TrailRenderer trail;               // Trail rendered during sprinting and dashing
     [SerializeField] private Transform attackTranform;
     public static event Action OnPlayerDash;
-    
+
     /* -- Private Fields -- 
      * Used only within this class
      */
@@ -88,14 +89,20 @@ public class PlayerMovement : MonoBehaviour
 
     private bool isWallSliding;      // checks if a character has collided with a wall + is 
     private bool isWallJumping;      // check if we have jumped to stop player input for 'x' seconds
-    private float wallJumpCounter;     // Used to count down the time
     private float wallJumpingDirection; // redirects the player away from the wall
-
+    
     private float coyoteTimeCounter; // Counts down the coyote time jump
     private bool canDash = true;     // Determines if a player can dash
     private int dashCount = 0;
 
     private GameObject[] enemies;
+
+    private bool isSliding = false;
+    private bool isJumping = false;
+    private float originalGravity = 0;
+
+    private SpriteRenderer spriteRenderer;
+
     /* --------------------------------- */
 
 
@@ -107,7 +114,6 @@ public class PlayerMovement : MonoBehaviour
 
         if (stamina <= 0)
         {
-            Debug.Log("Cant Dash");
             return;
         }
     }
@@ -119,7 +125,6 @@ public class PlayerMovement : MonoBehaviour
 
         if (stamina <= 0)
         {
-            Debug.Log("Cant Dash");
             return;
         }
     }
@@ -131,10 +136,9 @@ public class PlayerMovement : MonoBehaviour
 
         // initialize the physics for our player
         playerRigidbody = GetComponent<Rigidbody2D>();
+        originalGravity = playerRigidbody.gravityScale;
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
-
-
-
 
     /* Called at fixed time intervals, typically every 0.02 seconds (or 50 times per second 
      * [can be changed in settings]). 
@@ -145,20 +149,20 @@ public class PlayerMovement : MonoBehaviour
      */
     private void FixedUpdate()
     {
-       
-        enemies = GameObject.FindGameObjectsWithTag("Enemy");
 
-        if (isDashing) // if the player is dashing dont listen for any input
-        {
-            return;
-        }
+        enemies = GameObject.FindGameObjectsWithTag("Enemy");
 
         if (!canMove)
         {
+
             return;
         }
 
-        
+        // if the player is doing any of these things dont listen for any input
+        if (isDashing || isSliding || isWallJumping)
+        {
+            return;
+        }
 
         horizontalInput = Input.GetAxisRaw("Horizontal"); // checks for L/R input
         verticalInput = Input.GetAxisRaw("Vertical"); // checks for L/R input
@@ -181,7 +185,7 @@ public class PlayerMovement : MonoBehaviour
                 {
                     trail.emitting = false;
                 }
-                
+
             }
 
             // used in attackAnimator to switch between idle/moving animations
@@ -200,48 +204,25 @@ public class PlayerMovement : MonoBehaviour
             Flip();
         }
 
-        if (GroundCollision()) // Check if the player is grounded
-        {
-            dashCount = 0;
-            RegainStamina();
-            // Reset the isWallJumping flag(s) and the coyote time variable
-            coyoteTimeCounter = coyoteTime;
-            isWallJumping = false;
-            animator.SetBool("WallJumping", false);
-            canDash = true;
-            canMove = true;
-
-            foreach (GameObject enemy in enemies)
-            {
-                Physics2D.IgnoreCollision(enemy.GetComponent<Collider2D>(), GetComponent<Collider2D>(), false);
-            }
-        }
-        else
-        {
-            coyoteTimeCounter -= Time.fixedDeltaTime;
-        }
-
-
-        if (WallCollision())
-        {
-            animator.SetBool("WallJumping", false);
-            
-            isWallJumping = false;
-            canMove = true;
-        }
 
         if (RampCollision() && horizontalInput == 0)
         {
             playerRigidbody.velocity = new Vector2(0, 0);
             playerRigidbody.isKinematic = true;
-        } 
+
+            if (Input.GetKey(KeyCode.Space))
+            {
+                playerRigidbody.velocity = Vector2.up * jumpForce;
+                animator.SetBool("Jumping", true);
+                StartCoroutine(StopJump());
+            }
+        }
         else
         {
             playerRigidbody.isKinematic = false;
         }
 
 
-        animator.SetBool("Grounded", GroundCollision()); // used in combo with vert speed to switch between falling
         animator.SetFloat("VertSpeed", playerRigidbody.velocity.y);   // and other states (idle, running)
     }
 
@@ -251,18 +232,83 @@ public class PlayerMovement : MonoBehaviour
     {
 
         // Calculates jump (tapping space)
-        if (GroundCollision() && coyoteTimeCounter > 0f && Input.GetKeyDown(KeyCode.Space))
+        if ((GroundCollision() || RampCollision()) && coyoteTimeCounter > 0f && Input.GetKeyDown(KeyCode.Space))
         {
             playerRigidbody.velocity = Vector2.up * jumpForce;
+            animator.SetBool("Jumping", true);
+            StartCoroutine(StopJump());
         }
-        else if (!GroundCollision() && coyoteTimeCounter > 0f && Input.GetKeyDown(KeyCode.Space))
+        else if (!(GroundCollision() || RampCollision()) && coyoteTimeCounter > 0f && Input.GetKeyDown(KeyCode.Space))
         {
             playerRigidbody.velocity = Vector2.up * jumpForce;
             coyoteTimeCounter = 0f;
+            animator.SetBool("Jumping", true);
+            StartCoroutine(StopJump());
 
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftShift)) // start sprinting
+        if (WallCollision())
+        {
+
+            if (GroundCollision() || RampCollision())
+            {
+                canMove = true;
+                animator.SetBool("Grounded", true);
+                coyoteTimeCounter = coyoteTime;
+                isWallSliding = false;
+                animator.SetBool("WallSliding", isWallSliding);
+            } 
+            else 
+            {
+                
+                animator.SetBool("Grounded", false);
+            }
+
+            isSliding = false;
+            //spriteRenderer.flipX = true;
+            animator.SetBool("Sliding", false);
+
+            WallSlide();
+        }
+        else
+        {
+            spriteRenderer.flipX = false;
+            isWallSliding = false;
+            animator.SetBool("WallSliding", isWallSliding);
+        }
+
+        if ((GroundCollision() || RampCollision()) && !WallCollision())
+        {
+            
+
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                Slide();
+            }
+
+            animator.SetBool("Grounded", true); // used in combo with vert speed to switch between falling
+
+            
+            dashCount = 0;
+            RegainStamina();
+            // Reset the isWallJumping flag(s) and the coyote time variable
+            coyoteTimeCounter = coyoteTime;
+            isWallSliding = false;
+            animator.SetBool("WallSliding", isWallSliding);
+            canMove = true;
+            canDash = true;
+        } 
+        else
+        {
+            coyoteTimeCounter -= Time.fixedDeltaTime;
+        }
+
+        if (!WallCollision() && !GroundCollision() && !RampCollision())
+        {
+            playerRigidbody.isKinematic = false;
+        }
+
+        if (Input.GetKey(KeyCode.LeftShift)) // start sprinting
         {
             isSprinting = true;
         }
@@ -273,12 +319,10 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // call outside functions to handle wall slide/jump
-        WallSlide();
+
+
         WallJump();
-        if (isWallSliding)
-        {
-            isWallJumping = false;
-        }
+
 
         if (Input.GetMouseButtonDown(1) && canDash) // perform dash
         {
@@ -286,7 +330,19 @@ public class PlayerMovement : MonoBehaviour
 
         }
 
+        if (WallCollision() && !GroundCollision())
+        {
+            spriteRenderer.flipX = true;
+        }
 
+
+    }
+
+    private IEnumerator StopJump()
+    {
+        yield return new WaitForSeconds(0.4f);
+        isJumping = false;
+        animator.SetBool("Jumping", isJumping);
 
     }
 
@@ -304,51 +360,130 @@ public class PlayerMovement : MonoBehaviour
         // Check if the player is touching the ground layer
         bool grounded = groundCheck.IsTouchingLayers(groundLayer);
 
-        // Check if the player is not touching the wall layer
+        // Check if the player is touching the wall layer
         bool onWall = groundCheck.IsTouchingLayers(wallLayer);
 
-        // Check if the player is touching the ramp layer
-        bool onRamp = groundCheck.IsTouchingLayers(rampLayer);
 
         // Return true if the player's feet are grounded on a surface
-        return grounded || onWall || onRamp;
+        return grounded || onWall;
     }
 
     /* Checks if the hitbox has collided with a wall */
     private bool WallCollision()
     {
-        return wallCheck.IsTouchingLayers(wallLayer);
+        return wallCheck.IsTouchingLayers(wallLayer) /*|| wallCheck.IsTouchingLayers(treeLayer)*/;
     }
 
 
     /* Handles flippage of the character */
     public void Flip()
     {
+        
         // Invert the sign of the scale's X component
         Vector3 currentScale = transform.localScale;
         currentScale.x *= -1;
-        this.transform.localScale = currentScale;
+        transform.localScale = currentScale;
+
         // Reverse the facing direction flag
         facingRight = !facingRight;
 
+        
+
     }
 
+    private void Slide()
+    {
+        canMove = false;
+        transform.Find("GroundCheck").GetComponent<Collider2D>().enabled = false;
+        playerRigidbody.gravityScale += 0.8f;
+        isSliding = true;
+        animator.SetBool("Sliding", true);
+        StartCoroutine(PauseInputForDuration(0.8f));
 
+
+        /*regPlayerCol.enabled = false;
+        slidePlayerCol.enabled = true;*/
+
+        if (horizontalInput < 0)
+        {
+            playerRigidbody.velocity = (Vector2.left * slidingSpeed);
+        }
+        else if (horizontalInput > 0)
+        {
+            playerRigidbody.velocity = (Vector2.right * slidingSpeed);
+        }
+
+        StartCoroutine(StopSlide(0.6f));
+    }
+
+    private IEnumerator StopSlide(float duration)
+    {
+
+        float elapsedTime = 0f;
+
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        while (RampCollision() || playerRigidbody.velocity.y < 0)
+        {
+            yield return null;
+        }
+
+
+        playerRigidbody.gravityScale = originalGravity;
+        isSliding = false;
+        animator.SetBool("Sliding", false);
+        transform.Find("GroundCheck").GetComponent<Collider2D>().enabled = true;
+
+    }
 
     /* Calculates speed at which player should slide on wall and handles dropping */
     private void WallSlide()
     {
-        isWallJumping = false;
         // if in the air and in contact with the wall...
-        if (WallCollision() && !GroundCollision() && !Input.GetKey(KeyCode.Space))
+        if (WallCollision() && !GroundCollision())
         {
-            GetComponent<SpriteRenderer>().flipX = true;
+            isWallSliding = true;
+            spriteRenderer.flipX = true;
 
-            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
+            
+            if (!Input.GetKey(KeyCode.Space))
             {
-                if (Input.GetKey(KeyCode.W)) // wall climbing with horizontal input
+                if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
+                {
+                    if (Input.GetKey(KeyCode.W)) // wall climbing with horizontal input
+                    {
+                        isWallSliding = true;
+                        canMove = true;
+                        isWallJumping = false;
+                        animator.SetBool("WallJumping", isWallJumping);
+
+                        playerRigidbody.velocity = new Vector2(playerRigidbody.velocity.x, wallClimbingSpeed);
+
+                        if (horizontalInput != 0)
+                        {
+                            playerRigidbody.velocity = new Vector2(horizontalInput * walkSpeed, playerRigidbody.velocity.y);
+                        }
+
+                    }
+                    else
+                    {
+                        isWallSliding = true;
+                        playerRigidbody.velocity = new Vector2(playerRigidbody.velocity.x, Mathf.Clamp(playerRigidbody.velocity.y, -wallSlidingSpeed, float.MaxValue));
+                    }
+
+                }
+                else if (Input.GetKey(KeyCode.W)) // wall climbing with horizontal input
                 {
                     isWallSliding = true;
+                    canMove = true;
+                    isWallJumping = false;
+                    animator.SetBool("WallJumping", isWallJumping);
+
                     playerRigidbody.velocity = new Vector2(playerRigidbody.velocity.x, wallClimbingSpeed);
 
                     if (horizontalInput != 0)
@@ -356,43 +491,29 @@ public class PlayerMovement : MonoBehaviour
                         playerRigidbody.velocity = new Vector2(horizontalInput * walkSpeed, playerRigidbody.velocity.y);
                     }
 
-                } 
-                else
-                {
-                    isWallSliding = true;
-                    playerRigidbody.velocity = new Vector2(playerRigidbody.velocity.x, Mathf.Clamp(playerRigidbody.velocity.y, -wallSlidingSpeed, float.MaxValue));
                 }
-
-            }
-            else if (Input.GetKey(KeyCode.W)) // wall climbing with horizontal input
-            {
-                isWallSliding = true;
-                playerRigidbody.velocity = new Vector2(playerRigidbody.velocity.x, wallClimbingSpeed);
-
-                if (horizontalInput != 0)
+                else if (Input.GetKey(KeyCode.S)) // ... drops the player at normal speed instead of sliding
                 {
+
                     playerRigidbody.velocity = new Vector2(horizontalInput * walkSpeed, playerRigidbody.velocity.y);
+                    isWallSliding = false;
                 }
+                else // Wall slide behavior
+                {
+                    isWallSliding = false;
 
-            }
-            else if (Input.GetKey(KeyCode.S)) // ... drops the player at normal speed instead of sliding
+                }
+            } 
+            else if (Input.GetKey(KeyCode.Space) && horizontalInput == 0)
             {
+                spriteRenderer.flipX = false;
+            } 
 
-                playerRigidbody.velocity = new Vector2(horizontalInput * walkSpeed, playerRigidbody.velocity.y);
-                isWallSliding = false;
-            }
-            else // Wall slide behavior
-            {
-                isWallSliding = false;
-
-
-            }
-
-        }
-        else
+        } 
+        else if (GroundCollision())
         {
-            GetComponent<SpriteRenderer>().flipX = false;
             isWallSliding = false;
+            spriteRenderer.flipX = false;
         }
 
         animator.SetBool("WallSliding", isWallSliding);
@@ -402,60 +523,68 @@ public class PlayerMovement : MonoBehaviour
     /* Handles wall jump mechanisms */
     private void WallJump()
     {
-        if (isWallSliding)
+
+
+        if (WallCollision() && !GroundCollision() && !RampCollision() 
+            && Input.GetKeyDown(KeyCode.Space) && horizontalInput == 0)
         {
-            isWallJumping = false;
+            
             // set direction opposite of current player x direction
             wallJumpingDirection = -transform.localScale.x;
-            wallJumpCounter = wallJumpingTime;
-        }
-        else
-        {
-            // gives player extra time to wall jump after leaving the wall
-            wallJumpCounter -= Time.deltaTime;
-        }
-
-        if (WallCollision() && Input.GetKeyDown(KeyCode.Space) && wallJumpCounter > 0f)
-        {
             isWallSliding = false;
+            animator.SetBool("WallSliding", isWallSliding);
             isWallJumping = true;
-            wallJumpCounter = 0f; // player has used up their wall jump
             animator.SetBool("WallJumping", isWallJumping);
+            
 
             // if player orientation is different from wall jump direction, update the way they are facing
             if (transform.localScale.x != wallJumpingDirection)
             {
                 Flip(); // Use the existing Flip() method to flip the character
+                
             }
 
             Debug.Log("WallJumpPower " + wallJumpPower);
             // Disable player input for the duration of wallJumpDuration
 
-            
-            canMove = false; // Enable player movement again
+
             playerRigidbody.velocity = new Vector2(wallJumpingDirection * wallJumpPower.x, wallJumpPower.y);
             StartCoroutine(PauseInputForDuration(wallJumpDuration));
-            
+
 
             Debug.Log("Direction + Power.x: " + wallJumpingDirection * wallJumpPower.x + " Power.y " + wallJumpPower.y);
 
-            
+
 
         }
     }
 
+
     public IEnumerator PauseInputForDuration(float duration) // pause input for wall jump
     {
-        
+        Debug.Log("PauseInputForDuration called with duration: " + duration);
 
-        yield return new WaitForSeconds(duration);
+        canMove = false;
+        // Wait for the specified duration
+        float elapsedTime = 0f;
 
-        
+        while (elapsedTime < duration)
+        {
+            if (GroundCollision() || RampCollision())
+            {
+                break;
+            }
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        // The coroutine will resume execution after the specified duration
         isWallJumping = false;
         animator.SetBool("WallJumping", isWallJumping);
-        canMove = true; // Enable player movement again
-
-        
+       
+        isSliding = false;
+        animator.SetBool("Sliding", false);
 
     }
 
@@ -464,13 +593,11 @@ public class PlayerMovement : MonoBehaviour
     {
         canDash = false;
         isDashing = true;
-
+        isWallJumping = false;
+        animator.SetBool("WallJumping", isWallJumping);
         // Ignore collisions with objects tagged as "Enemy"
-        
-        foreach (GameObject enemy in enemies)
-        {
-            Physics2D.IgnoreCollision(enemy.GetComponent<Collider2D>(), GetComponent<Collider2D>(), true);
-        }
+        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Enemy"), true);
+
 
         float originalGravity = playerRigidbody.gravityScale;
 
@@ -508,7 +635,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 DrainStamina(1);
             }
-            
+
         }
         else
         {
@@ -520,17 +647,20 @@ public class PlayerMovement : MonoBehaviour
 
         if (dashCount > 3)
         {
-            
+
             canMove = true;
             isDashing = false;
 
-
+            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Enemy"), false);
             yield break;
         }
 
+        if (GroundCollision() || RampCollision())
+        {
+            playerRigidbody.gravityScale = 0f;
+        }
 
-
-        playerRigidbody.gravityScale = 0f;
+        
         playerRigidbody.velocity = new Vector2(dashDirection.x, dashDirection.y);
         if (trail != null)
         {
@@ -541,7 +671,7 @@ public class PlayerMovement : MonoBehaviour
 
         while (elapsedTime < dashTime)
         {
-            if (WallCollision() /*|| DashCollision()*/)
+            if (WallCollision())
             {
                 break; // Exit the loop if WallCollision() is true
             }
@@ -551,21 +681,17 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
-
-
-
         if (trail != null)
         {
             trail.emitting = false;
         }
         playerRigidbody.gravityScale = originalGravity;
-
+        canMove = true;
         isDashing = false;
         canDash = true;
+        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Enemy"), false);
 
-        
     }
-
 
 }
 

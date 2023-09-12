@@ -53,11 +53,6 @@ public class PlayerAttack : MonoBehaviour
         playerAnimator.SetBool("Attacking", false);
     }
 
-    private void FixedUpdate()
-    {
-        playerAnimator.SetBool("Grounded", playerMovement.GroundCollision());
-    }
-
     void Update()
     {
         // Update the attack cooldown timer
@@ -115,10 +110,10 @@ public class PlayerAttack : MonoBehaviour
 
             if (direction.y >= 0.80f)
             {
-                playerRigidbody.AddForce(new Vector2(direction.x * horizJumpForce, vertJumpForce * 2), ForceMode2D.Impulse);
+                playerRigidbody.velocity = new Vector2(direction.x * horizJumpForce, vertJumpForce * 1.2f);
             } else
             {
-                playerRigidbody.AddForce(new Vector2(direction.x * horizJumpForce, vertJumpForce), ForceMode2D.Impulse);
+                playerRigidbody.velocity = new Vector2(direction.x * horizJumpForce, vertJumpForce);
             }
 
             if (direction.x < 0 && playerMovement.facingRight)
@@ -129,9 +124,6 @@ public class PlayerAttack : MonoBehaviour
                 playerMovement.Flip();
             }
             
-            Debug.Log(direction);
-
-
             // Start the attack cooldown
             attackCooldownTimer = attackCooldown;
             StartCoroutine(ResetAttackAnimation());
@@ -160,9 +152,6 @@ public class PlayerAttack : MonoBehaviour
 
                     if (hitObject.CompareTag("Enemy"))
                     {
-                        // Perform actions based on the hit object (enemy)
-                        Debug.Log("Hit object: " + hitObject.name);
-
                         // Lock the raycast to the hit enemy's position
                         isRaycastLocked = true;
                         lockedEnemy = hitObject;
@@ -196,11 +185,11 @@ public class PlayerAttack : MonoBehaviour
 
             if (direction.y >= 0.80f)
             {
-                playerRigidbody.AddForce(new Vector2(direction.x * horizJumpForce, vertJumpForce * 2), ForceMode2D.Impulse);
+                playerRigidbody.velocity = new Vector2(direction.x * horizJumpForce, vertJumpForce * 1.2f);
             }
             else
             {
-                playerRigidbody.AddForce(new Vector2(direction.x * horizJumpForce, vertJumpForce), ForceMode2D.Impulse);
+                playerRigidbody.velocity = new Vector2(direction.x * horizJumpForce, vertJumpForce);
             }
 
             if (direction.x < 0 && playerMovement.facingRight)
@@ -211,8 +200,6 @@ public class PlayerAttack : MonoBehaviour
             {
                 playerMovement.Flip();
             }
-
-
             // Start the attack cooldown
             attackCooldownTimer = attackCooldown;
             StartCoroutine(ResetAttackAnimation());
