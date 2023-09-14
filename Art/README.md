@@ -6,5 +6,5 @@ I have not moved art assets here yet because I'm busy with development *(lazy)*,
 
 > ### [Code](https://github.com/GrowingPaigns/15-Minutes-From-Jupiter/tree/main/Code) > [15 Minutes From Jupiter](https://github.com/GrowingPaigns/15-Minutes-From-Jupiter/tree/main/Code) > [Assets](https://github.com/GrowingPaigns/15-Minutes-From-Jupiter/tree/main/Code/15%20Minutes%20From%20Jupiter/Assets)
 
-In MainMenuAssets and LevelAssets there is a conglomerate of different pixel art additions
+:information_source: *In MainMenuAssets and LevelAssets there is a conglomerate of different pixel art additions*
 

@@ -10,11 +10,15 @@
 
 # 15 Minutes From Jupiter (Prototype)
 
-#### *A repository for the beginnings of a roguelike bullet hell developed in Summer 2023*
+#### *A repository that holds base-level mechanics for a 2D action platformer in Unity*
 
-
-
+:information_source: **This repo is no longer being actively updated as of (09/13/23) for two reasons**. :information_source:
+- _**Firstly**, we feel that this is a solid base that many interested C.S. students could iterate upon, especially because this code is not the best and could definitely be refined._
+    - _With that said, we hope you will at least credit us if you incorporate this code into your own project_
+- _**Secondly**, we are starting to get into more complex aspects of this game which we do not necessarily want to be publicly accessible, especially if we eventually want to sell this product. Thereby, we are moving all work on this game over to a private repository so that we can continue to iterate upon this base in our own way_
+---
 ### Folders: 
+---
 ### 🎵 [Ambiance](https://github.com/GrowingPaigns/15-Minutes-From-Jupiter/tree/main/Ambiance): 
 - Contains all assets related to sound fx or music within the game
 
@@ -41,3 +45,7 @@
     - Gameplay Directory - contains weapon ideas, general gameplay ideas, and decided-upon gameplay concepts
     - Story Directory - holds the 1st version of the story (will most likely be completely different by the final version)
     - Timeline Directory - will contain the project timeline (to be updated on 05/19/23)
+---      
+### Outside Asset References:
+---
+- [Julio Cacko - Input Art Assets](https://juliocacko.itch.io/free-input-prompts) 
