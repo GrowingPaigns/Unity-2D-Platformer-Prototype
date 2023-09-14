@@ -39,12 +39,6 @@
         - Menu System
         - Basic 2D Tiled Beta Level for Testing
         - Camera with Follow System 
-
-### 📄 [Logistics](https://github.com/GrowingPaigns/15-Minutes-From-Jupiter/tree/main/Logistics):
-- Contains Story/Gameplay/Other logistical documentation used for brainstorming purposes 
-    - Gameplay Directory - contains weapon ideas, general gameplay ideas, and decided-upon gameplay concepts
-    - Story Directory - holds the 1st version of the story (will most likely be completely different by the final version)
-    - Timeline Directory - will contain the project timeline (to be updated on 05/19/23)
 ---      
 ### Outside Asset References:
 ---
