@@ -13,9 +13,9 @@
 #### *A repository that holds base-level mechanics for a 2D action platformer in Unity*
 
 :information_source: **This repo is no longer being actively updated as of (09/13/23) for two reasons**. :information_source:
-- _**Firstly**, I feel that this is a solid base that many interested C.S. students could iterate upon, especially because my code is not the best and could definitely be refined._
-    - _With that said, I hope you will at least credit me if you incorporate this code into your own project_
-- _**Secondly**, I am starting to get into more complex aspects of this game which I do not necessarily want to be publicly accessible, especially if I eventually want to sell this product. Thereby, I am moving all work on this over to a private repository so that I can iterate upon this base in my own way_
+- _**Firstly**, we feel that this is a solid base that many interested C.S. students could iterate upon, especially because this code is not the best and could definitely be refined._
+    - _With that said, we hope you will at least credit us if you incorporate this code into your own project_
+- _**Secondly**, we are starting to get into more complex aspects of this game which we do not necessarily want to be publicly accessible, especially if we eventually want to sell this product. Thereby, we are moving all work on this game over to a private repository so that we can continue to iterate upon this base in our own way_
 ---
 ### Folders: 
 ---
