@@ -33,10 +33,13 @@
 ### 🖥️ [Code](https://github.com/GrowingPaigns/15-Minutes-From-Jupiter/tree/main/Code):
 - Contain the in-progress Unity project files for the developed product (Complete Unity Project)
     - Holds a mix of assets
-        - Player Movement, Animations, Attack Mechanics
-        - Enemy Movement, Animations, Death Mechanics
+        - Player Movement, Animations, Attack Mechanics, Health, Dodge Mechanics
+        - Basic Small Enemy Movement, Animations, Attack Mechanics, Death Mechanics
         - Crosshair
-        - Menu System
+        - Main Menu System
+        - Pause Menu
+        - Timer UI
+        - Health UI
         - Basic 2D Tiled Beta Level for Testing
         - Camera with Follow System 
 ---      
