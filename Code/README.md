@@ -6,7 +6,7 @@
 
 > #### :heavy_exclamation_mark: Getting Started:
 > - Download this section of the repo 
-> - Open the 15 Minutes From Jupiter file directly through Unity hub to access the project
+> - Open the 15 Minutes To Jupiter file directly through Unity hub to access the project
 
 #### Files Included:
 
