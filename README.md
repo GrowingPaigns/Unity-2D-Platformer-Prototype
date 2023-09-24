@@ -7,6 +7,7 @@
   </tr>
 </table>
 
+_Please share whatever feedback you have, or projects you are working on over in the_ [Discussions](https://github.com/GrowingPaigns/15-Minutes-From-Jupiter/discussions) _tab_
 
 # 15 Minutes From Jupiter (Prototype)
 
@@ -17,7 +18,6 @@
     - _With that said, **we hope you will at least credit us if you incorporate this code into your own project**_
 - ❗_**Secondly**, we are starting to get into more complex aspects of this game which we do not necessarily want to be publicly accessible, especially if we eventually want to sell this product. Thereby, we are moving all work on this game over to a private repository so that we can continue to iterate upon this base in our own way_
 
-Please feel free give us feed back on anything you want, and share whatever you're working on over in the [discussions](https://github.com/GrowingPaigns/15-Minutes-From-Jupiter/discussions) tab
 ---
 ### Folders: 
 ---
