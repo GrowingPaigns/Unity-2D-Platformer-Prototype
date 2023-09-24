@@ -9,7 +9,7 @@
 
 _Please share whatever feedback you have, or projects you are working on over in the_ [Discussions](https://github.com/GrowingPaigns/15-Minutes-From-Jupiter/discussions) _tab_
 
-# 15 Minutes From Jupiter (Prototype)
+# 15 Minutes From Jupiter (Action Platformer Prototype)
 
 #### *A repository that holds base-level mechanics for a 2D action platformer in Unity*
 
