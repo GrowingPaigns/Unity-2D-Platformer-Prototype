@@ -51,25 +51,25 @@ _Please share whatever feedback you have, or projects you are working on over in
           - [X] enemy has 2 health states, injured, and not injured, with coresponding animations for each state 
 
 - [x] **Environment:**
-  - [X] **🏕️ Basic Tile Map:**
+  - **🏕️ Basic Tile Map:**
     - [X] Tilemap System for ground, walls, ramps, and other objects in the environment
     - [X] Distinguished uses for each layer
       - Sign layer has tutorial message bubbles
       - Wall layer used to detect wall climbing/jumping functionality
       - etc...
-   - [x] **🎥 Camera:**
+   - **🎥 Camera:**
      - [X] Basic Camera Follow System
        - Camera lags a little behind the player while moving, but ultimately just follows the player position   
 
 - [X] **User Interface (UI):**
-  - [X] **🖼️ Basic Main Menu System:**
+  - **🖼️ Basic Main Menu System:**
     - Screen for Options, HighScore, Info _(all work in progress builds, nothing functional)_
     - Selectable options for New Game, and Quit _(work)_
     - [X] Basic Button Animations
     - [X] Basic Background Music
-  - [X] **⚙️ Basic Pause Menu System:**
+  - **⚙️ Basic Pause Menu System:**
     - [X] Pressing ESC in-game pauses game systems and brings up a menu with different selectable options
-  - [X] **🔲 Basic HUD (Heads Up Display):**
+  - **🔲 Basic HUD (Heads Up Display):**
     - [X] Health Hearts that update according to enemy attacks
     - [X] Stamina Crystals that update according to how many times in a row the player dashes
     - [X] Basic Timer _(just counts down, doesnt do anything else yet)_ 
