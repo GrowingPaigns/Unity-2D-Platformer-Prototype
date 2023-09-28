@@ -108,13 +108,13 @@ _Please share whatever feedback you have, or projects you are working on over in
 ### General Information:
 ---
 
-#### 🏭 Runtime Environment
+**🏭 Runtime Environment**
 
 - Runtime: **[Windows](https://www.microsoft.com/en-us/windows) 10**
 - Game Engine: **[Unity](https://unity.com/releases/editor/whats-new/2022.3.7) 2022.3.7**
 - Scripts Editor: **[Visual Studio](https://visualstudio.microsoft.com) 2022**
 
-#### 📚 Learning Resources I Used
+**📚 Learning Resources I Used**
 
 - 📕 [Unity Documentation](https://docs.unity.com)
 - 📼 [Health Heart System - By BMo](https://www.youtube.com/watch?v=5NViMw-ALAo)
