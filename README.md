@@ -7,20 +7,18 @@
   </tr>
 </table>
 
-_Please share whatever feedback you have, or projects you are working on over in the_ [Discussions](https://github.com/GrowingPaigns/15-Minutes-From-Jupiter/discussions) _tab_
+<h1 align="center">Action Platformer Base Mechanics</h1>
+<p align="center"><i>A repository that holds base-level mechanics for a 2D action platformer in Unity.</i></p>
+<p align="center">Please share whatever feedback you have, or projects you are working on over in the <a href="https://github.com/GrowingPaigns/15-Minutes-From-Jupiter/discussions">Discussions tab</a></p>
 
-# Action Platformer Base
-
-#### *A repository that holds base-level mechanics for a 2D action platformer in Unity*
+---
 
 :information_source: **This repo is no longer being actively updated as of (09/13/23) for two reasons**. :information_source:
 - ❗ _**Firstly**, we feel that this is a solid base that many interested C.S. students could iterate upon, especially because this code is not the best and could definitely be refined._
     - _With that said, **we hope you will at least credit us if you incorporate this code into your own project**_
 - ❗ _**Secondly**, we are starting to get into more complex aspects of this game which we do not necessarily want to be publicly accessible, especially if we eventually want to sell this product. Thereby, we are moving all work on this game over to a private repository so that we can continue to iterate upon this base in our own way_
 
----      
 ### 🎯 Implemented Objectives:
----
 - [x] **Movement:**
   - **🏃 Physics-Based Platforming Movement**
     - [X] Jumping
@@ -120,3 +118,6 @@ _Please share whatever feedback you have, or projects you are working on over in
 - 📼 [Health Heart System - By BMo](https://www.youtube.com/watch?v=5NViMw-ALAo)
 - 📼 [BlackThornProd](https://www.youtube.com/@Blackthornprod)
 - 📼 [Brackeys](https://www.youtube.com/@Brackeys)
+
+**📄 My Own Tutorials**
+- 📼 [2D Custom Health System](https://www.youtube.com/watch?v=sAy0K5W9Woc)
