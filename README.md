@@ -64,6 +64,7 @@
     - Screen for Options, HighScore, Info _(all work in progress builds, nothing functional)_
     - Selectable options for New Game, and Quit _(work)_
     - [X] Basic Button Animations
+      - [ ] Button interaction sound fx
     - [X] Basic Background Music
   - **⚙️ Basic Pause Menu System:**
     - [X] Pressing ESC in-game pauses game systems and brings up a menu with different selectable options
@@ -72,20 +73,9 @@
     - [X] Stamina Crystals that update according to how many times in a row the player dashes
     - [X] Basic Timer _(just counts down, doesnt do anything else yet)_ 
 ---
-### Folder Hierarchy: 
-
-### 🎵 [Ambiance](https://github.com/GrowingPaigns/15-Minutes-From-Jupiter/tree/main/Ambiance): 
-- Contains all assets related to sound fx or music within the game
-
-### 🖌️ [Art](https://github.com/GrowingPaigns/15-Minutes-From-Jupiter/tree/main/Art):
-- Contains all assets related to game art from the menu to the player model 
-
-### 💽 [Beta Assets](https://github.com/GrowingPaigns/15-Minutes-From-Jupiter/tree/main/Beta%20Assets):
-- Art, music, and animations from previous attempts at building this project
-
-### 🖥️ [Code](https://github.com/GrowingPaigns/15-Minutes-From-Jupiter/tree/main/Code):
-- Contain the in-progress Unity project files for the developed product (Complete Unity Project)
-    - Holds a mix of assets
+### 🖥️ [Project Overview](https://github.com/GrowingPaigns/15-Minutes-From-Jupiter/tree/main/Code):
+- Contains the in-progress Unity project files for the developed product (Complete Unity Project)
+    - Assets *(Holds a mix of game assets)*
         - Player Movement, Animations, Attack Mechanics, Health, Dodge Mechanics
         - Basic Small Enemy Movement, Animations, Attack Mechanics, Death Mechanics
         - Crosshair
@@ -94,7 +84,22 @@
         - Timer UI
         - Health UI
         - Basic 2D Tiled Beta Level for Testing
-        - Camera with Follow System 
+        - Camera with Follow System
+    - *(Various other files necessary to run the project)*
+---
+### **Project Directory**
+#### 🎵 [Ambiance](https://github.com/GrowingPaigns/Unity-2D-Platformer-Prototype/tree/main/Code/15%20Minutes%20From%20Jupiter/Assets/MainMenuAssets/Menu%20Ambiance): 
+- Contains Menu Music/SFX assets *(Button SFX not implemented)*
+
+#### 🖌️ [Menu](https://github.com/GrowingPaigns/Unity-2D-Platformer-Prototype/tree/main/Code/15%20Minutes%20From%20Jupiter/Assets/MainMenuAssets)/[Game](https://github.com/GrowingPaigns/Unity-2D-Platformer-Prototype/tree/main/Code/15%20Minutes%20From%20Jupiter/Assets/LevelAssets) Art:
+- Contains all assets related to menu systems and in-game elements
+
+#### 📜 [Code/Scripts](https://github.com/GrowingPaigns/Unity-2D-Platformer-Prototype/tree/main/Code/15%20Minutes%20From%20Jupiter/Assets/Scripts):
+- Contains all programmed elements 
+
+#### 🎥 [Scenes](https://github.com/GrowingPaigns/Unity-2D-Platformer-Prototype/tree/main/Code/15%20Minutes%20From%20Jupiter/Assets/Scenes):
+- Contains different loadable scenes accessible through in-game means 
+
 ---   
 ### General Information:
 
