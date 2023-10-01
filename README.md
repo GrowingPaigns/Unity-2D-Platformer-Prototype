@@ -14,9 +14,9 @@
 ---
 
 :information_source: **This repo is no longer being actively updated as of (09/13/23) for two reasons**. :information_source:
-- ❗ _**Firstly**, we feel that this is a solid base that many interested C.S. students could iterate upon, especially because this code is not the best and could definitely be refined._
+- ❗ _**First**, we feel that this is a solid base that many interested C.S. students could iterate upon, especially because this code is not the best and could definitely be refined._
     - _With that said, **we hope you will at least credit us if you incorporate this code into your own project**_
-- ❗ _**Secondly**, we are starting to get into more complex aspects of this game which we do not necessarily want to be publicly accessible, especially if we eventually want to sell this product. Thereby, we are moving all work on this game over to a private repository so that we can continue to iterate upon this base in our own way_
+- ❗ _**Second**, we are starting to get into more complex aspects of this game which we do not necessarily want to be publicly accessible, especially if we eventually want to sell this product. Therefore, we are moving all work on this game over to a private repository so that we can continue to iterate upon this base in our own way_
 
 ### Implemented Objectives:
 - [x] **Movement:**
@@ -31,7 +31,7 @@
 - [x] **Player Combat:**
     - **🏹 Basic 360° Attack**
       - [X] Player moves _(slightly)_ towards the direction of the attack
-      - [X] On attacking an enemy, screen shakes slightly 
+      - [X] On attacking an enemy, the screen shakes slightly 
     - **🎞️ Basic Slice Animation with Custom Hitboxes**
 
 - [x] **Basic Artificial Intelligence _(Enemy AI)_:**
@@ -43,10 +43,10 @@
           - [x] Player Detection triggers chase parameters.
             - enemy ignores terrain changes and chases after the player (does not jump gaps) 
         - [x] **🏹 Automated Attacks:**
-          - [X] When player is in range, enemy plays special attack animation
-            - while attack is on cooldown, enemy simply charges the player
+          - [X] When a player is in range, the enemy plays a special attack animation
+            - while the attack is on cooldown, enemy simply charges the player
         - [x] **💔 Health States:**
-          - [X] enemy has 2 health states, injured, and not injured, with coresponding animations for each state 
+          - [X] enemy has 2 health states, injured, and not injured, with corresponding animations for each state 
 
 - [x] **Environment:**
   - **🏕️ Basic Tile Map:**
@@ -57,7 +57,7 @@
       - etc...
    - **🎥 Camera:**
      - [X] Basic Camera Follow System
-       - Camera lags a little behind the player while moving, but ultimately just follows the player position   
+       - Camera lags a little behind the player while moving, but ultimately just follows the player's position   
 
 - [X] **User Interface (UI):**
   - **🖼️ Basic Main Menu System:**
@@ -71,7 +71,7 @@
   - **🔲 Basic HUD (Heads Up Display):**
     - [X] Health Hearts that update according to enemy attacks
     - [X] Stamina Crystals that update according to how many times in a row the player dashes
-    - [X] Basic Timer _(just counts down, doesnt do anything else yet)_ 
+    - [X] Basic Timer _(just counts down, doesn't do anything else yet)_ 
 ---
 ### 🖥️ [Project Overview](https://github.com/GrowingPaigns/15-Minutes-From-Jupiter/tree/main/Code):
 - Contains the in-progress Unity project files for the developed product (Complete Unity Project)
