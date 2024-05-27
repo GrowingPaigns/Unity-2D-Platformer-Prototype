@@ -20,7 +20,7 @@
 
 ### Implemented Objectives:
 - [x] **Movement:**
-  - **🏃 Physics-Based Platforming Movement**
+  - **🏃 (Basic) Physics-Based Platforming Movement**
     - [X] Jumping
     - [X] L/R Sprinting + Walking
     - [X] Ability to Climb on specific surfaces _(walls)_
