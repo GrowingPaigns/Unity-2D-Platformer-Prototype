@@ -14,9 +14,9 @@
 ---
 
 :information_source: **This repo is no longer being actively updated as of (09/13/23) for two reasons**. :information_source:
-- ❗ _**First**, we feel that this is a solid base that many interested C.S. students could iterate upon, especially because this code is not the best and could definitely be refined._
+- ❗ _**First**, we feel that this is a solid base that many interested C.S. students could iterate upon, especially because the physics are very basic, and can definitely be refined._
     - _With that said, **we hope you will at least credit us if you incorporate this code into your own project**_
-- ❗ _**Second**, we are starting to get into more complex aspects of this game which we do not necessarily want to be publicly accessible, especially if we eventually want to sell this product. Therefore, we are moving all work on this game over to a private repository so that we can continue to iterate upon this base in our own way_
+- ❗ _**Second**, we are starting to get into more complex aspects of this game (like making better physics) which we do not necessarily want to be publicly accessible. Therefore, we are moving all work on this game over to a private repository so that we can continue to iterate upon this base in our own way_
 
 ### Implemented Objectives:
 - [x] **Movement:**
