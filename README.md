@@ -74,7 +74,7 @@
     - [X] Basic Timer _(just counts down, doesn't do anything else yet)_ 
 ---
 ### 🖥️ [Project Overview](https://github.com/GrowingPaigns/15-Minutes-From-Jupiter/tree/main/Code):
-- Contains the in-progress Unity project files for the developed product (Complete Unity Project)
+- Contains the first attempt at building a 2D-pixel art platformer in Unity.
     - Assets *(Holds a mix of game assets)*
         - Player Movement, Animations, Attack Mechanics, Health, Dodge Mechanics
         - Basic Small Enemy Movement, Animations, Attack Mechanics, Death Mechanics
